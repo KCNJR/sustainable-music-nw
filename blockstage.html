@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sustainable Music NW — Block Stage</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,600;1,6..72,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Givebutter Runtime -->
+    <script src="https://widgets.givebutter.com/latest.umd.cjs?acct=rLxvLXMNPPO0V1eL&p=other"></script>
+
+    <style>
+        :root[data-theme="light"] {
+            --bg-top: #ede8df;
+            --bg-bottom: #f5f2eb;
+            --bg-surface: #ffffff;
+            --bg-muted: #e7e1d5;
+            --border-color: #ded7c8;
+            
+            --text-heading: #1e1b18;
+            --text-body: #443e37;
+            --text-muted: #746c62;
+            
+            --brand-gold: #dca842;
+            --brand-gold-dark: #c59129;
+            --brand-teal: #0f766e;
+            --brand-green: #15803d;
+            --brand-green-bg: #f0fdf4;
+
+            --nav-bg: rgba(237, 232, 223, 0.94);
+            --footer-bg: #ede8df;
+            --footer-border: rgba(222, 215, 200, 0.7);
+            --banner-bg: #1e1b18;
+            --banner-text: #ffffff;
+            --banner-sub: #a39c93;
+        }
+
+        :root[data-theme="dark"] {
+            --bg-top: #0f1319;
+            --bg-bottom: #090c10;
+            --bg-surface: #151b22;
+            --bg-muted: #1c232d;
+            --border-color: #242c37;
+            
+            --text-heading: #f8fafc;
+            --text-body: #cbd5e1;
+            --text-muted: #94a3b8;
+            
+            --brand-gold: #e5b558;
+            --brand-gold-dark: #cc9c41;
+            --brand-teal: #14b8a6;
+            --brand-green: #22c55e;
+            --brand-green-bg: #062215;
+
+            --nav-bg: rgba(15, 19, 25, 0.94);
+            --footer-bg: #090c10;
+            --footer-border: rgba(36, 44, 55, 0.8);
+            --banner-bg: #151b22;
+            --banner-text: #ffffff;
+            --banner-sub: #94a3b8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-body); 
+            background-color: var(--bg-bottom); 
+            line-height: 1.6;
+            transition: background-color 0.25s ease, color 0.25s ease;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* EMBEDDED MAIN SITE LOGO MARK */
+        .mark {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            border-radius: 50%;
+            display: inline-block;
+            background-image: url("data:image/png;base64,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");
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        /* EXACT MAIN SITE HEADER */
+        header.site-header { 
+            background-color: var(--nav-bg); 
+            backdrop-filter: blur(10px);
+            padding: 0.85rem clamp(16px, 3vw, 32px); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            transition: background-color 0.25s ease, border-color 0.25s ease;
+        }
+
+        .nav__brand { 
+            display: flex; 
+            align-items: center; 
+            gap: 0.75rem; 
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .brand-text-block {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            line-height: 1.15;
+        }
+        .brand-title {
+            font-family: 'Newsreader', Georgia, serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-heading);
+            letter-spacing: -0.01em;
+        }
+        .brand-meta {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.64rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-top: 1px;
+        }
+
+        .nav__links { display: flex; align-items: center; gap: clamp(14px, 2vw, 24px); }
+        .nav__links a { 
+            text-decoration: none; 
+            color: var(--text-heading); 
+            font-weight: 600; 
+            font-size: 0.92rem;
+            transition: color 0.2s ease;
+        }
+        .nav__links a:hover, .nav__links a.active { color: var(--brand-gold); }
+
+        .themeBtn {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 9999px;
+            padding: 0.45rem 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-heading);
+            transition: all 0.2s ease;
+        }
+        .themeBtn:hover {
+            border-color: var(--brand-gold);
+            transform: translateY(-1px);
+        }
+        .themeBtn svg { width: 14px; height: 14px; fill: currentColor; }
+
+        /* HERO & CONTENT */
+        .hero-section {
+            background-color: var(--bg-top);
+            border-bottom: 1px solid var(--border-color);
+            padding: 4.5rem 1.5rem 4rem;
+            text-align: center;
+            transition: background-color 0.25s ease, border-color 0.25s ease;
+        }
+        .hero-inner { max-width: 900px; margin: 0 auto; }
+        
+        .hero-pill {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(220, 168, 66, 0.15);
+            color: var(--brand-gold-dark);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0.35rem 0.9rem;
+            border-radius: 9999px;
+            margin-bottom: 1.2rem;
+        }
+        :root[data-theme="dark"] .hero-pill { color: var(--brand-gold); }
+
+        .hero-section h1 { 
+            font-family: 'Newsreader', Georgia, serif;
+            font-size: clamp(2.6rem, 5vw, 3.6rem); 
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            color: var(--text-heading);
+            margin-bottom: 1.2rem; 
+        }
+        .hero-section h1 em { color: var(--brand-gold); font-style: italic; }
+        .hero-section p { 
+            font-size: 1.25rem; 
+            color: var(--text-body); 
+            max-width: 720px; 
+            margin: 0 auto 2rem; 
+            font-weight: 400; 
+            line-height: 1.55;
+        }
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-gold {
+            background-color: var(--brand-gold);
+            color: #1e1b18;
+            font-weight: 700;
+            font-size: 1.05rem;
+            padding: 0.85rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            transition: all 0.2s ease;
+        }
+        .btn-gold:hover { transform: translateY(-2px); background-color: var(--brand-gold-dark); }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-heading);
+            font-weight: 600;
+            font-size: 1.05rem;
+            padding: 0.85rem 1.8rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-outline:hover { background: var(--bg-muted); }
+
+        .content-section {
+            background-color: var(--bg-bottom);
+            padding: 3.5rem 1.5rem 5rem;
+            transition: background-color 0.25s ease;
+        }
+        .container { max-width: 1140px; margin: 0 auto; }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3.5rem;
+        }
+        .step-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            transition: all 0.25s ease;
+        }
+        .step-number {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--brand-gold);
+            line-height: 1;
+            margin-bottom: 0.75rem;
+        }
+        .step-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-heading);
+        }
+        .step-text { color: var(--text-muted); font-size: 0.95rem; }
+
+        .card { 
+            background: var(--bg-surface); 
+            border: 1px solid var(--border-color);
+            border-radius: 14px; 
+            padding: 2.5rem; 
+            margin-bottom: 3rem; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            transition: background-color 0.25s ease, border-color 0.25s ease;
+        }
+        .hub-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+        .hub-title { font-size: 1.4rem; font-weight: 800; color: var(--text-heading); }
+        .hub-sub { font-size: 0.9rem; color: var(--text-muted); }
+
+        .campaign-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1rem;
+        }
+        .campaign-selector {
+            border: 1px solid var(--border-color);
+            background: var(--bg-muted);
+            border-radius: 8px;
+            padding: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .campaign-selector:hover, .campaign-selector.active {
+            border-color: var(--brand-gold);
+            background: var(--bg-surface);
+            box-shadow: 0 4px 12px rgba(220, 168, 66, 0.1);
+        }
+        .campaign-selector h4 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.3rem; color: var(--text-heading); }
+        .campaign-selector .meta { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.75rem; }
+        .mini-bar { background: var(--border-color); height: 6px; border-radius: 3px; overflow: hidden; }
+        .mini-bar-fill { background: var(--brand-gold); height: 100%; }
+
+        .progress-container {
+            background-color: var(--border-color);
+            height: 18px;
+            border-radius: 9px;
+            overflow: hidden;
+            margin: 1.5rem 0 2rem;
+        }
+        .progress-bar {
+            background: linear-gradient(90deg, var(--brand-teal), var(--brand-gold));
+            height: 100%;
+            border-radius: 9px;
+            transition: width 0.4s ease;
+        }
+
+        .tiers-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+        .tier-box {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.2rem;
+            background: var(--bg-surface);
+            position: relative;
+            transition: all 0.25s ease;
+        }
+        .tier-box.unlocked { 
+            border-color: var(--brand-green); 
+            background: var(--brand-green-bg); 
+        }
+        .tier-box.current { 
+            border-color: var(--brand-gold); 
+            background: rgba(220, 168, 66, 0.08); 
+        }
+        .tier-tag {
+            position: absolute;
+            top: -10px;
+            right: 12px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            background: var(--text-muted);
+            color: #ffffff;
+        }
+        .tier-box.unlocked .tier-tag { background: var(--brand-green); }
+        .tier-box.current .tier-tag { background: var(--brand-gold); color: #1e1b18; }
+        .tier-name { font-size: 1.05rem; font-weight: 800; margin-bottom: 0.2rem; color: var(--text-heading); }
+        .tier-cost { font-weight: 700; color: var(--brand-gold); margin-bottom: 0.4rem; font-size: 0.95rem; }
+        .tier-detail { font-size: 0.83rem; color: var(--text-muted); line-height: 1.4; }
+
+        .detail-split {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 2.5rem;
+        }
+        @media(max-width: 820px) { .detail-split { grid-template-columns: 1fr; } }
+
+        .math-box {
+            background: var(--bg-muted);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        .math-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.88rem;
+        }
+        .math-table th, .math-table td {
+            padding: 0.6rem 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .math-table th {
+            font-weight: 700;
+            color: var(--brand-gold-dark);
+            background: var(--bg-surface);
+        }
+        :root[data-theme="dark"] .math-table th { 
+            color: var(--brand-gold); 
+            background: var(--bg-surface);
+        }
+        .math-table tr:last-child td { border-bottom: none; }
+
+        /* TRUST STRIP */
+        .trust-strip {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        .trust-headline {
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 1.8rem;
+        }
+        .trust-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem 2.8rem;
+        }
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            font-size: 0.95rem;
+        }
+        .trust-item svg { width: 24px; height: 24px; fill: var(--brand-gold); flex-shrink: 0; }
+        .badge-img { display: inline-block; object-fit: contain; flex-shrink: 0; }
+        
+        .trust-subtext {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-top: 1.8rem;
+            max-width: 760px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.5;
+        }
+
+        .action-banner {
+            background: var(--banner-bg);
+            color: var(--banner-text);
+            border-radius: 14px;
+            padding: 3.5rem 2rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            margin-bottom: 4rem;
+        }
+        .action-banner h2 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.8rem;
+            color: #ffffff;
+        }
+        .action-banner p {
+            max-width: 620px;
+            margin: 0 auto 1.8rem;
+            color: var(--banner-sub);
+            font-size: 1.1rem;
+        }
+
+        /* EXACT STYLED MAIN SITE FOOTER */
+        footer.foot {
+            background-color: var(--footer-bg);
+            border-top: 1px solid var(--footer-border);
+            padding: 3.5rem 2rem 2.5rem;
+            transition: background-color 0.25s ease, border-color 0.25s ease;
+        }
+        footer .wrap {
+            max-width: 76rem;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+        }
+        .foot__top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        .foot__brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+        .foot__brand .t {
+            display: block;
+            font-family: 'Newsreader', Georgia, serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--text-heading);
+            letter-spacing: -0.01em;
+        }
+        .foot__brand .s {
+            display: block;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+        .foot__nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.4rem 2rem;
+            align-items: center;
+        }
+        .foot__nav a {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-heading);
+            text-decoration: none;
+            transition: color 0.15s ease;
+        }
+        .foot__nav a:hover, .foot__nav a.active { color: var(--brand-gold); }
+
+        .foot__soc {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.85rem;
+        }
+        .foot__soc a {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.74rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--text-heading);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.5rem 1.1rem;
+            background: transparent;
+            transition: all 0.2s ease;
+        }
+        .foot__soc a:hover {
+            border-color: var(--brand-gold);
+            color: var(--brand-gold);
+        }
+
+        .foot__divider {
+            height: 1px;
+            background-color: var(--footer-border);
+            width: 100%;
+            margin-top: 0.3rem;
+        }
+
+        .foot__bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.74rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        /* MODALS */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); z-index: 100; justify-content: center; align-items: center; padding: 1rem; }
+        .modal-content { background: var(--bg-surface); color: var(--text-heading); max-width: 640px; width: 100%; border-radius: 12px; padding: 2.2rem; max-height: 90vh; overflow-y: auto; position: relative; border: 1px solid var(--border-color); }
+        .modal-header { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .close-modal { position: absolute; top: 1.2rem; right: 1.5rem; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
+        .form-group { margin-bottom: 1.1rem; }
+        .form-group label { display: block; font-weight: 600; font-size: 0.92rem; margin-bottom: 0.35rem; color: var(--text-heading); }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.7rem;
+            background: var(--bg-muted);
+            color: var(--text-heading);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: 2px solid var(--brand-gold);
+            border-color: transparent;
+        }
+        .checkbox-group { display: flex; gap: 0.6rem; align-items: flex-start; margin-top: 1rem; }
+    </style>
+</head>
+<body>
+
+    <!-- EXACT MAIN SITE HEADER -->
+    <header class="site-header">
+        <a href="/" class="nav__brand">
+            <span class="mark"></span>
+            <div class="brand-text-block">
+                <span class="brand-title">Sustainable Music NW</span>
+                <span class="brand-meta">SEATTLE · EST. 2025</span>
+            </div>
+        </a>
+        <nav class="nav__links">
+            <a href="/">Home</a>
+            <a href="/#approach">Our Approach</a>
+            <a href="/#events">Events</a>
+            <a href="/#gallery">Gallery</a>
+            <a href="/#about">About</a>
+            <a href="/blockstage.html" class="active">Block Stage</a>
+            <a href="/#donate">Donate</a>
+            
+            <button class="themeBtn" onclick="toggleTheme()" id="themeBtn" aria-label="Toggle theme">
+                <svg id="themeIcon" viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>
+                <span id="themeLabel">Bright</span>
+            </button>
+        </nav>
+    </header>
+
+    <section class="hero-section">
+        <div class="hero-inner">
+            <div class="hero-pill">Turnkey Live Music for Neighborhoods</div>
+            <h1>Live music, back<br>on <em>your block.</em></h1>
+            <p>We bring professional live music directly to Seattle neighborhoods: vetted live bands and dedicated sound systems—all bundled together.</p>
+            
+            <div class="hero-buttons">
+                <button class="btn-gold" onclick="openIntakeModal()">Book Your Block Concert</button>
+                <button class="btn-outline" onclick="openExplainerModal()">How the Service Works</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section">
+        <div class="container">
+            
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">01</div>
+                    <div class="step-title">Choose Your Location & Vibe</div>
+                    <div class="step-text">Pick your street, cul-de-sac, or park picnic and musical style—from solo acoustic sets to full 7-piece headliners.</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">02</div>
+                    <div class="step-title">Split the Band & Sound Bill</div>
+                    <div class="step-text">Share your neighborhood's private booking page. Just 9 households chipping in $100 fully confirms your concert.</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">03</div>
+                    <div class="step-title">We Deliver the Whole Show</div>
+                    <div class="step-text">Our vetted artists arrive with complete sound equipment and deliver an unforgettable live show right outside your front door.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="hub-head">
+                    <div>
+                        <h3 class="hub-title">Active Neighborhood Bookings</h3>
+                        <div class="hub-sub">Select an upcoming neighborhood drive to view progress or chip in</div>
+                    </div>
+                </div>
+                <div class="campaign-grid" id="neighborhoodGrid"></div>
+            </div>
+
+            <div class="card">
+                <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 0.3rem; color: var(--text-heading);" id="campaignTitle">Active Neighborhood Concerts</h2>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Primary 4-Piece Target: <strong>$1,640</strong> | Max 7-Piece Headliner: <strong>$2,850</strong></p>
+
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBarFill" style="width: 0%;"></div>
+                </div>
+
+                <div class="tiers-row" id="tiersGrid"></div>
+
+                <div class="detail-split">
+                    <div>
+                        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.6rem; color: var(--text-heading);">About This Event</h3>
+                        <div id="campaignDesc" style="color: var(--text-muted); margin-bottom: 1.2rem; font-size: 0.95rem;">
+                            Neighbors are pooling together to bring live music right to the block!
+                        </div>
+
+                        <div class="math-box">
+                            <strong style="font-size: 1rem; color: var(--text-heading);">The Complete Instrumentation & Household Splitting Menu</strong>
+                            <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.3rem;">Every level includes vetted artists and complete PA sound equipment. Here is how easily a block unlocks each ensemble at $100 per household:</p>
+                            
+                            <table class="math-table">
+                                <thead>
+                                    <tr>
+                                        <th>Ensemble Size</th>
+                                        <th>Package Total</th>
+                                        <th>Households at $100</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Solo Acoustic</strong></td>
+                                        <td>$500</td>
+                                        <td>5 Households</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Duo (2-Person)</strong> <em>(Base Goal)</em></td>
+                                        <td>$850</td>
+                                        <td>9 Households</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Trio (3-Person)</strong></td>
+                                        <td>$1,250</td>
+                                        <td>13 Households</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Quartet (4-Piece Band)</strong></td>
+                                        <td>$1,640</td>
+                                        <td>17 Households</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Quintet (5-Piece Band)</strong></td>
+                                        <td>$2,050</td>
+                                        <td>21 Households</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Sextet (6-Piece Band)</strong></td>
+                                        <td>$2,450</td>
+                                        <td>25 Households</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>7-Piece Big Band / Headliner</strong></td>
+                                        <td>$2,850</td>
+                                        <td>29 Households</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div style="background: rgba(220, 168, 66, 0.12); border-left: 4px solid var(--brand-gold); padding: 1rem; border-radius: 0 8px 8px 0;">
+                            <strong style="color: var(--text-heading); font-size: 0.95rem;">100% Risk-Free Guarantee</strong>
+                            <p style="font-size: 0.86rem; color: var(--text-body); margin-top: 0.2rem;">Every concert requires an <strong>$850 duo baseline</strong> to confirm talent and sound. If your block does not reach $850 by your cutoff date, the event is called off and <strong>100% of pledges are automatically refunded back to cards</strong> via Givebutter. Zero financial liability for the host or neighbors.</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.8rem; box-shadow: 0 4px 15px rgba(0,0,0,0.02); text-align: center;">
+                            <h4 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-heading);">Chip In to This Concert</h4>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Help this block unlock the next ensemble level for their gathering.</p>
+                            
+                            <a href="https://givebutter.com" target="_blank" class="btn-gold" id="pledgeButtonLink" style="display: block; width: 100%; text-decoration: none;">
+                                Chip In to This Event
+                            </a>
+                            
+                            <div style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-muted);">
+                                Powered by <strong>Givebutter Escrow</strong> for instant, secure payments and automated refunds.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Affiliations Bar -->
+            <div class="trust-strip">
+                <div class="trust-headline">Vetted & Supported For Dependability By</div>
+                <div class="trust-grid">
+                    <div class="trust-item">
+                        <img src="/afm-logo.png" alt="AFM" style="height: 24px; width: 24px; object-fit: contain; background: #ffffff; border-radius: 50%; padding: 2px;">
+                        <span>American Federation of Musicians (AFM)</span>
+                    </div>
+                    <div class="trust-item">
+                        <img src="/union-logo.png" alt="Musicians' Assoc Local 76-493" class="badge-img" style="height: 22px; width: auto; background: #ffffff; padding: 2px 4px; border-radius: 3px;">
+                        <span>Musicians' Assoc. Local 76-493</span>
+                    </div>
+                    <div class="trust-item">
+                        <img src="/mptf-logo.jpg" alt="MPTF" class="badge-img" style="height: 24px; width: auto; border-radius: 2px;">
+                        <span>Music Performance Trust Fund (MPTF)</span>
+                    </div>
+                    <div class="trust-item">
+                        <svg viewBox="0 0 24 24"><path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.8l7 3.5v7.4l-7 3.5-7-3.5V8.3l7-3.5z"/></svg>
+                        <span>City of Seattle</span>
+                    </div>
+                    <div class="trust-item">
+                        <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 16l-4-4 1.41-1.41L11 14.17l6.59-6.59L19 9l-8 8z"/></svg>
+                        <span>Candid / GuideStar</span>
+                    </div>
+                    <div class="trust-item">
+                        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                        <span>Benevity Certified</span>
+                    </div>
+                    <div class="trust-item">
+                        <img src="/givebutter-logo.png" alt="Givebutter" class="badge-img" style="height: 22px; width: 22px; border-radius: 4px;">
+                        <span>Givebutter Verified</span>
+                    </div>
+                </div>
+                <div class="trust-subtext">
+                    Sustainable Music Northwest is a registered 501(c)(3) nonprofit cultural organization. All musicians are booked and compensated in coordination with AFM Local 76-493 and MPTF standards. All pooled pledges are held in secure escrow and qualify as tax-deductible to the full extent of the law.
+                </div>
+            </div>
+
+            <div class="action-banner">
+                <h2>Ready to Host a Concert on Your Block?</h2>
+                <p>Skip the sound gear rentals and musician contracting. We deliver everything you need for an unforgettable neighborhood party.</p>
+                <button class="btn-gold" style="font-size: 1.1rem; padding: 0.95rem 2.4rem;" onclick="openIntakeModal()">Book Your Block Party</button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Explainer Modal -->
+    <div class="modal-overlay" id="explainerModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeExplainerModal()">&times;</span>
+            <div class="modal-header">The Turnkey Block Party Service</div>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.2rem;">
+                Hiring live bands usually requires sourcing sound systems, negotiating rates, and paying large upfront deposits. <strong>Block Stage solves all of it as a single turnkey service.</strong>
+            </p>
+            <div style="background: var(--bg-muted); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.2rem; margin-bottom: 1.5rem;">
+                <h4 style="font-weight: 700; color: var(--brand-gold); margin-bottom: 0.5rem;">What We Handle For You:</h4>
+                <ul style="padding-left: 1.2rem; font-size: 0.92rem; color: var(--text-muted); line-height: 1.7;">
+                    <li>Vetted, high-energy, crowd-pleasing professional bands (AFM Local 76-493 backed)</li>
+                    <li>Full PA sound equipment & instruments tailored to your space</li>
+                    <li>All artist contracting, fair-wage compensation, and insurance</li>
+                    <li>Custom campaign flyer & QR code so neighbors can chip in</li>
+                </ul>
+            </div>
+            <button class="btn-gold" style="width: 100%;" onclick="switchToCampaignModal()">Book Your Block Concert</button>
+        </div>
+    </div>
+
+    <!-- Booking Intake Modal -->
+    <div class="modal-overlay" id="championModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeIntakeModal()">&times;</span>
+            <div class="modal-header">Book a Block Stage Concert</div>
+            <p style="margin-bottom: 1.2rem; color: var(--text-muted); font-size: 0.9rem;">
+                Submit your party location and preferred date. We will set up your block's booking page and generate a print-ready promotional flyer with a custom QR code.
+            </p>
+            <form id="intakeForm" onsubmit="handleFormSubmit(event)">
+                <div class="form-group">
+                    <label>Host / Coordinator Full Name</label>
+                    <input type="text" id="champ_name" required placeholder="e.g., Sarah Miller">
+                </div>
+                <div class="form-group">
+                    <label>Contact Email Address</label>
+                    <input type="email" id="champ_email" required placeholder="sarah@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Neighborhood & Location</label>
+                    <input type="text" id="champ_neighborhood" required placeholder="e.g., Wedgwood (35th Ave NE & 75th St)">
+                </div>
+                <div class="form-group">
+                    <label>Event Venue Type</label>
+                    <select id="champ_venue" required>
+                        <option value="">Select gathering type...</option>
+                        <option value="street">Residential Street Gathering</option>
+                        <option value="park">Public Park Lawn / Picnic Area</option>
+                        <option value="yard">Shared Community Lawn / Cul-de-sac</option>
+                        <option value="hall">Community Grounds / HOA Courtyard</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Target Date (Minimum 60 days out for band scheduling)</label>
+                    <input type="date" id="champ_date" required>
+                </div>
+                <div class="form-group">
+                    <label>Music Preference</label>
+                    <select id="champ_genre" required>
+                        <option value="mix">All-Ages Community Mix</option>
+                        <option value="funk">High-Energy Funk / Soul / Dance</option>
+                        <option value="jazz">Classic Jazz / Rhythm & Blues</option>
+                        <option value="folk">Acoustic Folk / Americana</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Target Anchor Sponsor / Micro-Pledge Option</label>
+                    <select id="champ_anchor">
+                        <option value="25">$25 — Neighbor Supporter</option>
+                        <option value="50">$50 — Block Co-Host</option>
+                        <option value="100" selected>$100 — Community Catalyst (Recommended)</option>
+                        <option value="250">$250 — Local Business Sponsor</option>
+                        <option value="500">$500 — Solo Performance Anchor ($500)</option>
+                        <option value="850">$850 — Full Duo Event Sponsor ($850)</option>
+                        <option value="1250">$1,250 — Full Trio Event Sponsor ($1,250)</option>
+                        <option value="1640">$1,640 — Full Quartet Anchor ($1,640)</option>
+                        <option value="2050">$2,050 — Full Quintet Anchor ($2,050)</option>
+                        <option value="2450">$2,450 — Full Sextet Anchor ($2,450)</option>
+                        <option value="2850">$2,850 — Full 7-Piece Big Band Anchor ($2,850)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tell Us About Your Gathering</label>
+                    <textarea id="champ_desc" rows="3" required placeholder="e.g., Annual summer barbecue. We want an energetic band to play while neighbors hang out."></textarea>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" required id="fallbackCheck">
+                    <label for="fallbackCheck" style="font-size: 0.83rem; color: var(--text-muted);">
+                        I understand that an <strong>$850 baseline</strong> confirms the musicians and equipment. If unreached by the deadline, no event takes place and 100% of pledges are automatically refunded via Givebutter escrow.
+                    </label>
+                </div>
+                <button type="submit" id="submitBtn" class="btn-gold" style="width: 100%; margin-top: 1.2rem;">Create Our Block Campaign & Flyer</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- EXACT STYLED MAIN SITE FOOTER -->
+    <footer class="foot">
+      <div class="wrap">
+        <div class="foot__top">
+          <a href="/" class="foot__brand">
+            <span class="mark"></span>
+            <span>
+              <span class="t">Sustainable Music NW</span>
+              <span class="s">Seattle · Est. 2025 · 501(c)(3)</span>
+            </span>
+          </a>
+          <div class="foot__nav">
+            <a href="/">Home</a>
+            <a href="/#approach">Our Approach</a>
+            <a href="/#events">Events</a>
+            <a href="/#gallery">Gallery</a>
+            <a href="/#about">About</a>
+            <a href="/blockstage.html" class="active">Block Stage</a>
+            <a href="/#donate">Donate</a>
+          </div>
+          <div class="foot__soc">
+            <a class="foot__mail" href="mailto:info@sustainablemusicnw.org">info@sustainablemusicnw.org</a>
+            <a href="https://instagram.com/sustainablemusicnw" target="_blank" rel="noopener">Instagram</a>
+            <a href="https://facebook.com/SustainableMusicNorthwest" target="_blank" rel="noopener">Facebook</a>
+            <a href="https://youtube.com/@SustainableMusicNorthwest" target="_blank" rel="noopener">YouTube</a>
+          </div>
+        </div>
+        <div class="foot__divider"></div>
+        <div class="foot__bottom">
+          <span>© 2026 Sustainable Music Northwest</span>
+          <span>Music, on your block.</span>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+        function initTheme() {
+            const savedTheme = localStorage.getItem('smnw_theme') || 'dark';
+            setTheme(savedTheme);
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('smnw_theme', theme);
+
+            const label = document.getElementById('themeLabel');
+            const icon = document.getElementById('themeIcon');
+            if (theme === 'dark') {
+                if (label) label.innerText = 'Bright';
+                if (icon) icon.innerHTML = '<path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/>';
+            } else {
+                if (label) label.innerText = 'Dark';
+                if (icon) icon.innerHTML = '<path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>';
+            }
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            setTheme(current === 'light' ? 'dark' : 'light');
+        }
+
+        initTheme();
+
+        let campaigns = [];
+        let currentCampaign = {
+            id: "default_drive",
+            title: "Live Neighborhood Block Concert",
+            raised: 850,
+            goal: 1640,
+            givebutter_url: "https://givebutter.com",
+            desc: "Neighbors are pooling funds together to bring live music to the block!"
+        };
+
+        const ENSEMBLE_TIERS = [
+            { id: 'solo', name: 'Solo Acoustic', cost: 500, desc: 'Acoustic soloist set with sound equipment.' },
+            { id: 'duo', name: 'Duo (2-Person)', cost: 850, isBase: true, desc: 'Base goal confirms event! 2 vetted artists and full sound gear.' },
+            { id: 'trio', name: 'Trio (3-Person)', cost: 1250, desc: 'Expanded 3-piece combo with full dynamic sound.' },
+            { id: 'quartet', name: 'Quartet (4-Piece)', cost: 1640, desc: 'Full 4-piece rhythm section (jazz, soul, or funk outfit).' },
+            { id: 'quintet', name: 'Quintet (5-Piece)', cost: 2050, desc: 'High-energy 5-piece band with horns or percussion for neighborhood street dancing.' },
+            { id: 'sextet', name: 'Sextet (6-Piece)', cost: 2450, desc: 'Expanded 6-piece collective featuring multi-piece horn section.' },
+            { id: 'septet', name: '7-Piece Big Band', cost: 2850, desc: 'Ultimate headliner ensemble with full horn section and extended rhythm.' }
+        ];
+
+        async function loadActiveCampaigns() {
+            try {
+                const response = await fetch('/api/campaigns-active');
+                if (!response.ok) throw new Error('API route returned status: ' + response.status);
+                
+                const list = await response.json();
+                if (Array.isArray(list) && list.length > 0) {
+                    campaigns = list.map((item, index) => ({
+                        id: String(item.id || item.code || `cmp_${index}`),
+                        title: item.title || 'Neighborhood Block Concert',
+                        raised: Number(item.raised) || 0,
+                        goal: Number(item.goal) || 1640,
+                        givebutter_url: item.url || (item.slug ? `https://givebutter.com/${item.slug}` : 'https://givebutter.com'),
+                        desc: item.description || 'We are pooling funds to bring live music to our neighborhood living room!'
+                    }));
+                    currentCampaign = campaigns[0];
+                    renderGrid();
+                } else {
+                    document.getElementById('neighborhoodGrid').innerHTML = 
+                        '<p style="padding: 1.2rem; color: var(--text-muted); font-size: 0.95rem;">No active drives currently running. Be the first to start a concert on your block!</p>';
+                }
+            } catch (err) {
+                console.warn('Could not load active Givebutter campaigns:', err.message);
+                document.getElementById('neighborhoodGrid').innerHTML = 
+                    '<p style="padding: 1.2rem; color: var(--text-muted); font-size: 0.95rem;">Connect with neighbors to start a concert on your block!</p>';
+            } finally {
+                renderCampaignDetail();
+            }
+        }
+
+        function renderGrid() {
+            const gridEl = document.getElementById('neighborhoodGrid');
+            if (!gridEl || campaigns.length === 0) return;
+
+            gridEl.innerHTML = campaigns.map(c => {
+                const pct = Math.min(Math.round((c.raised / c.goal) * 100), 100);
+                const isActive = (currentCampaign && String(c.id) === String(currentCampaign.id)) ? 'active' : '';
+                return `
+                    <div class="campaign-selector ${isActive}" onclick="selectCampaign('${c.id}')">
+                        <h4>${c.title}</h4>
+                        <div class="meta">$${c.raised} pledged of $${c.goal}</div>
+                        <div class="mini-bar">
+                            <div class="mini-bar-fill" style="width: ${pct}%;"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selectCampaign(id) {
+            const found = campaigns.find(c => String(c.id) === String(id));
+            if (found) {
+                currentCampaign = found;
+                renderGrid();
+                renderCampaignDetail();
+            }
+        }
+
+        function renderCampaignDetail() {
+            if (!currentCampaign) return;
+
+            const titleEl = document.getElementById('campaignTitle');
+            const descEl = document.getElementById('campaignDesc');
+            const fillEl = document.getElementById('progressBarFill');
+
+            if (titleEl) titleEl.innerText = currentCampaign.title;
+            if (descEl) descEl.innerHTML = `<div>${currentCampaign.desc}</div>`;
+
+            const goalTarget = currentCampaign.goal || 1640;
+            const fillPct = Math.min(Math.round((currentCampaign.raised / goalTarget) * 100), 100);
+            if (fillEl) fillEl.style.width = fillPct + '%';
+
+            const raised = currentCampaign.raised;
+
+            const tiersGrid = document.getElementById('tiersGrid');
+            if (tiersGrid) {
+                tiersGrid.innerHTML = ENSEMBLE_TIERS.map((tier, idx) => {
+                    const isUnlocked = raised >= tier.cost;
+                    const prevTierCost = idx === 0 ? 0 : ENSEMBLE_TIERS[idx - 1].cost;
+                    const isCurrent = raised >= prevTierCost && raised < tier.cost;
+
+                    let cardClass = '';
+                    let badgeText = 'Locked';
+
+                    if (isUnlocked) {
+                        cardClass = 'unlocked';
+                        badgeText = tier.isBase ? 'Event Confirmed!' : 'Unlocked!';
+                    } else if (isCurrent) {
+                        cardClass = 'current';
+                        badgeText = `$${raised} / $${tier.cost}`;
+                    } else if (tier.isBase) {
+                        badgeText = 'Base Goal';
+                    }
+
+                    return `
+                        <div class="tier-box ${cardClass}">
+                            <span class="tier-tag">${badgeText}</span>
+                            <div class="tier-name">${tier.name}</div>
+                            <div class="tier-cost">$${tier.cost.toLocaleString()} ${tier.isBase ? '(Base Goal)' : 'Target'}</div>
+                            <div class="tier-detail">${tier.desc}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            const pledgeLink = document.getElementById('pledgeButtonLink');
+            if (pledgeLink) pledgeLink.href = currentCampaign.givebutter_url;
+        }
+
+        function openExplainerModal() { document.getElementById('explainerModal').style.display = 'flex'; }
+        function closeExplainerModal() { document.getElementById('explainerModal').style.display = 'none'; }
+        function switchToCampaignModal() {
+            closeExplainerModal();
+            openIntakeModal();
+        }
+
+        function openIntakeModal() { document.getElementById('championModal').style.display = 'flex'; }
+        function closeIntakeModal() { document.getElementById('championModal').style.display = 'none'; }
+
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "Creating Booking Page & Flyer...";
+            submitBtn.disabled = true;
+
+            const neighborhoodTitle = document.getElementById('champ_neighborhood').value.trim();
+
+            const payload = {
+                champion_name: document.getElementById('champ_name').value.trim(),
+                champion_email: document.getElementById('champ_email').value.trim(),
+                neighborhood_title: neighborhoodTitle,
+                venue_type: document.getElementById('champ_venue').value,
+                target_event_date: document.getElementById('champ_date').value,
+                genre_preference: document.getElementById('champ_genre').value,
+                micro_pledge_target: parseInt(document.getElementById('champ_anchor').value, 10) || 100,
+                description: document.getElementById('champ_desc').value.trim()
+            };
+
+            try {
+                const response = await fetch('/api/campaigns-create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    closeIntakeModal();
+
+                    const downloadUrl = data.flyer_data_url || data.flyer_pdf_url;
+                    if (downloadUrl) {
+                        const a = document.createElement('a');
+                        a.href = downloadUrl;
+                        a.download = `BlockStage-Flyer-${(neighborhoodTitle || 'BlockStage').replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                    }
+
+                    alert("Success! Your neighborhood booking campaign has been created.\n\nYour promotional flyer has downloaded and a confirmation email has been dispatched.");
+                    await loadActiveCampaigns();
+                } else {
+                    alert(`Error: ${data.message || 'Failed to create campaign'}`);
+                }
+            } catch (err) {
+                console.error('Submission failed:', err);
+                alert('Submission failed. Please check your network connection.');
+            } finally {
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        const minDate = new Date();
+        minDate.setDate(minDate.getDate() + 60);
+        const dateInput = document.getElementById('champ_date');
+        if (dateInput) {
+            dateInput.min = minDate.toISOString().split('T')[0];
+        }
+
+        renderCampaignDetail();
+        loadActiveCampaigns();
+    </script>
+</body>
+</html>
