@@ -607,6 +607,153 @@
             border-color: transparent;
         }
         .checkbox-group { display: flex; gap: 0.6rem; align-items: flex-start; margin-top: 1rem; }
+/* ==========================================================================
+   Comprehensive Mobile & Tablet Responsive Architecture
+   ========================================================================== */
+
+/* Prevent horizontal page blow-out */
+html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
+/* Base Form Input Font Size Fix (Prevents iOS Safari auto-zoom) */
+input, select, textarea {
+    font-size: 16px !important;
+}
+
+@media (max-width: 768px) {
+    /* 1. Header & Brand Navigation */
+    header.site-header, header {
+        padding: 0.65rem 1rem !important;
+    }
+    .nav__links a, 
+    .nav-links .nav-link,
+    .nav-cta {
+        display: none !important; /* Hide desktop nav bar links on mobile */
+    }
+    .themeBtn, .theme-toggle-btn {
+        padding: 0.5rem;
+        min-width: 44px;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .themeBtn span, .theme-toggle-btn span {
+        display: none !important; /* Keep only the sun/moon icon */
+    }
+
+    /* 2. Hero Typography & Buttons */
+    .hero-section, .hero {
+        padding: 2.75rem 1rem 2.25rem !important;
+    }
+    .hero-section h1, .hero h1 {
+        font-size: 2.15rem !important;
+        line-height: 1.18 !important;
+    }
+    .hero-section p, .hero p {
+        font-size: 1rem !important;
+        line-height: 1.5 !important;
+        margin-bottom: 1.5rem !important;
+    }
+    .hero-buttons {
+        flex-direction: column !important;
+        width: 100%;
+        gap: 0.75rem !important;
+    }
+    .hero-buttons .btn-gold,
+    .hero-buttons .btn-outline {
+        width: 100% !important;
+        text-align: center;
+        padding: 0.85rem 1rem !important;
+    }
+
+    /* 3. Container & Card Padding Compression */
+    .content-section, .container {
+        padding: 1.5rem 0.85rem 3rem !important;
+    }
+    .card {
+        padding: 1.25rem 1rem !important;
+        border-radius: 10px !important;
+        margin-bottom: 2rem !important;
+    }
+
+    /* 4. Single-Column Collapse for Grids & Tiers */
+    .steps-container {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+    .campaign-grid {
+        grid-template-columns: 1fr !important;
+    }
+    .tiers-row {
+        grid-template-columns: 1fr !important;
+        gap: 0.85rem !important;
+    }
+    .detail-split {
+        grid-template-columns: 1fr !important;
+        gap: 1.75rem !important;
+    }
+
+    /* 5. Math Table Horizontal Scroll Safeties */
+    .math-box {
+        padding: 1rem 0.75rem !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+    .math-table {
+        min-width: 440px; /* Scrolls smoothly rather than squishing column text */
+    }
+
+    /* 6. Mobile Modal Usability */
+    .modal-overlay {
+        align-items: flex-start !important;
+        padding: 0.5rem !important;
+        overflow-y: auto !important;
+    }
+    .modal-content {
+        padding: 1.5rem 1.15rem !important;
+        margin: 1rem auto !important;
+        max-height: none !important;
+        border-radius: 10px !important;
+    }
+    .close-modal {
+        top: 0.75rem !important;
+        right: 0.85rem !important;
+        padding: 0.5rem;
+        min-width: 44px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* 7. Footer Stacking */
+    footer.main-site-footer, footer.foot {
+        padding: 2.25rem 1rem 2rem !important;
+    }
+    .footer-top-row, .foot__top {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 1.5rem !important;
+    }
+    .footer-nav-links, .foot__nav {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 0.85rem 1.25rem !important;
+    }
+    .footer-pill-row, .foot__soc {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 0.5rem !important;
+    }
+    .footer-bottom-row, .foot__bottom {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.5rem !important;
+    }
+}
     </style>
 </head>
 <body>
