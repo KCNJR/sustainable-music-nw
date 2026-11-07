@@ -630,7 +630,7 @@ input, select, textarea {
     .nav__links a, 
     .nav-links .nav-link,
     .nav-cta {
-        display: none !important; /* Hide desktop nav bar links on mobile */
+        display: none !important; /* Keep desktop nav links hidden on mobile */
     }
     .themeBtn, .theme-toggle-btn {
         padding: 0.5rem;
@@ -641,7 +641,7 @@ input, select, textarea {
         justify-content: center;
     }
     .themeBtn span, .theme-toggle-btn span {
-        display: none !important; /* Keep only the sun/moon icon */
+        display: none !important;
     }
 
     /* 2. Hero Typography & Buttons */
@@ -669,17 +669,20 @@ input, select, textarea {
         padding: 0.85rem 1rem !important;
     }
 
-    /* 3. Container & Card Padding Compression */
-    .content-section, .container {
-        padding: 1.5rem 0.85rem 3rem !important;
+    /* 3. Containers & Card Width Optimization */
+    .content-section {
+        padding: 1.5rem 0.5rem 3rem !important;
+    }
+    .container {
+        padding: 0 0.5rem !important;
     }
     .card {
-        padding: 1.25rem 1rem !important;
+        padding: 1.25rem 0.75rem !important;
         border-radius: 10px !important;
-        margin-bottom: 2rem !important;
+        margin-bottom: 1.5rem !important;
     }
 
-    /* 4. Single-Column Collapse for Grids & Tiers */
+    /* 4. Single-Column Layouts */
     .steps-container {
         grid-template-columns: 1fr !important;
         gap: 1rem !important;
@@ -693,20 +696,80 @@ input, select, textarea {
     }
     .detail-split {
         grid-template-columns: 1fr !important;
-        gap: 1.75rem !important;
+        gap: 1.5rem !important;
     }
 
-    /* 5. Math Table Horizontal Scroll Safeties */
+    /* 5. Complete Instrumentation & Household Splitting Table Fix */
     .math-box {
-        padding: 1rem 0.75rem !important;
-        overflow-x: auto !important;
-        -webkit-overflow-scrolling: touch;
+        padding: 0.85rem 0.5rem !important;
+        margin: 1.2rem 0 !important;
+        border-radius: 8px !important;
+    }
+    .math-box strong {
+        font-size: 0.95rem !important;
+        line-height: 1.3 !important;
+        display: block;
+        margin-bottom: 0.4rem !important;
+    }
+    .math-box p {
+        font-size: 0.82rem !important;
+        line-height: 1.4 !important;
     }
     .math-table {
-        min-width: 440px; /* Scrolls smoothly rather than squishing column text */
+        width: 100% !important;
+        min-width: 0 !important;
+        font-size: 0.8rem !important;
+    }
+    .math-table th, 
+    .math-table td {
+        padding: 0.5rem 0.35rem !important;
+        white-space: nowrap;
+    }
+    .math-table th:first-child,
+    .math-table td:first-child {
+        white-space: normal !important;
+        font-size: 0.8rem !important;
+        line-height: 1.25 !important;
+        padding-right: 0.4rem !important;
+    }
+    .math-table th:nth-child(2),
+    .math-table td:nth-child(2) {
+        text-align: right !important;
+        font-weight: 700;
+        padding-right: 0.6rem !important;
+    }
+    .math-table th:last-child,
+    .math-table td:last-child {
+        text-align: right !important;
+        padding-right: 0.2rem !important;
     }
 
-    /* 6. Mobile Modal Usability */
+    /* 6. Guarantee & Pledge Cards */
+    .detail-split > div > div[style*="border-left"] {
+        padding: 0.85rem !important;
+        margin-top: 1rem !important;
+    }
+    .detail-split p {
+        font-size: 0.82rem !important;
+        line-height: 1.45 !important;
+    }
+    .detail-split > div:last-child > div {
+        padding: 1.25rem 0.85rem !important;
+    }
+    .detail-split h4 {
+        font-size: 1.15rem !important;
+    }
+    #pledgeButtonLink {
+        font-size: 1rem !important;
+        padding: 0.75rem 1rem !important;
+    }
+    .detail-split div[style*="font-size: 0.8rem"] {
+        font-size: 0.75rem !important;
+        line-height: 1.35 !important;
+        word-break: normal !important;
+    }
+
+    /* 7. Mobile Modal Layout */
     .modal-overlay {
         align-items: flex-start !important;
         padding: 0.5rem !important;
@@ -729,7 +792,7 @@ input, select, textarea {
         justify-content: center;
     }
 
-    /* 7. Footer Stacking */
+    /* 8. Footer Stacking */
     footer.main-site-footer, footer.foot {
         padding: 2.25rem 1rem 2rem !important;
     }
