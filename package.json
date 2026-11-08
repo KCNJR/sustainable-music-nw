@@ -1,0 +1,10 @@
+{
+  "name": "sustainable-music-nw",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "nodemailer": "^6.9.10",
+    "pdfkit": "^0.14.0",
+    "qrcode": "^1.5.3"
+  }
+}
