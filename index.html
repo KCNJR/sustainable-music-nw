@@ -704,6 +704,7 @@ body.editing .evcard:hover .ev-adm{opacity:1}
       <a data-go="events">Events</a>
       <a data-go="gallery">Gallery</a>
       <a data-go="about">About</a>
+      <a data-go="blockstage">Block Stage</a>
       <a data-go="donate">Donate</a>
     </div>
     <button class="themeBtn" id="themeBtn" aria-label="Toggle light and dark theme" title="Toggle theme">
@@ -1120,7 +1121,8 @@ body.editing .evcard:hover .ev-adm{opacity:1}
         <span><span class="t">Sustainable Music NW</span><span class="s">Seattle · Est. 2025 · 501(c)(3)</span></span>
       </button>
       <div class="foot__nav">
-        <a data-go="home">Home</a><a data-go="approach">Our Approach</a><a data-go="events">Events</a><a data-go="gallery">Gallery</a><a data-go="about">About</a><a data-go="donate">Donate</a>
+        <a data-go="home">Home</a><a data-go="approach">Our Approach</a><a data-go="events">Events</a><a data-go="gallery">Gallery</a><a data-go="about">About</a>
+      <a data-go="blockstage">Block Stage</a><a data-go="donate">Donate</a>
       </div>
       <div class="foot__soc">
         <a class="foot__mail" href="mailto:info@sustainablemusicnw.org">info@sustainablemusicnw.org</a>
@@ -1535,7 +1537,7 @@ var IMAGES={"kevin": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QEKRXh
   observeAll();
 
   /* ---------- router ---------- */
-  var views={home:'v-home',approach:'v-approach',events:'v-events',gallery:'v-gallery',about:'v-about',donate:'v-donate'};
+  var views={home:'v-home',approach:'v-approach',events:'v-events',gallery:'v-gallery',about:'v-about',donate:'v-donate',blockstage:'v-blockstage'};
   var navLinks=document.querySelectorAll('.nav__links a');
   function setActiveNav(name){navLinks.forEach(function(a){a.classList.toggle('on',a.dataset.go===name);});}
   function showView(name,scrollTarget){
@@ -1735,6 +1737,392 @@ var IMAGES={"kevin": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QEKRXh
         else{s.disabled=false;s.textContent='Save';alert('Save failed. Try again.');}
       }).catch(function(){s.disabled=false;s.textContent='Save';alert('Network error while saving.');});
   }
+})();
+</script>
+
+
+<!-- ============================================================
+     BLOCK STAGE (Native View)
+     ============================================================ -->
+<main class="view" id="v-blockstage">
+  <style>
+    #v-blockstage .bs-hero { padding: clamp(40px, 6vw, 80px) 0 clamp(30px, 4vw, 50px); text-align: center; }
+    #v-blockstage .bs-badge { display: inline-block; padding: 6px 14px; background: rgba(220,168,66,0.15); color: #dca842; border: 1px solid rgba(220,168,66,0.3); border-radius: 999px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.2rem; }
+    #v-blockstage .bs-title { font-size: clamp(2.2rem, 5vw, 3.8rem); line-height: 1.1; margin: 0 auto 1.2rem; max-width: 18ch; }
+    #v-blockstage .bs-lead { font-size: clamp(1rem, 2vw, 1.25rem); color: var(--text-muted); max-width: 46ch; margin: 0 auto 2rem; line-height: 1.6; }
+    #v-blockstage .bs-cta-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem; }
+    #v-blockstage .bs-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; max-width: 860px; margin: 0 auto; text-align: center; }
+    #v-blockstage .bs-stat { padding: 18px; border: 1px solid var(--border-subtle); border-radius: 8px; background: var(--bg-card); }
+    #v-blockstage .bs-stat .n { font-family: 'Newsreader', Georgia, serif; font-size: 2rem; color: #dca842; font-weight: 600; line-height: 1; margin-bottom: 4px; }
+    #v-blockstage .bs-stat .l { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* Production Steps */
+    #v-blockstage .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-top: 2rem; }
+    #v-blockstage .step-card { padding: 28px; border-radius: 8px; border: 1px solid var(--border-subtle); background: var(--bg-card); }
+    #v-blockstage .step-card .num { font-size: 1.2rem; font-weight: bold; color: #dca842; margin-bottom: 8px; }
+    #v-blockstage .step-card h3 { font-size: 1.25rem; margin: 0 0 8px; }
+    #v-blockstage .step-card p { font-size: 0.92rem; color: var(--text-muted); margin: 0; line-height: 1.5; }
+
+    /* Campaign Live Hub */
+    #v-blockstage .hub-container { display: grid; grid-template-columns: 1fr 340px; gap: 24px; margin-top: 2rem; }
+    @media (max-width: 860px) { #v-blockstage .hub-container { grid-template-columns: 1fr; } }
+    #v-blockstage .drives-list { display: flex; flex-direction: column; gap: 12px; margin-top: 1rem; }
+    #v-blockstage .drive-card { padding: 16px 20px; border: 1px solid var(--border-subtle); border-radius: 6px; background: var(--bg-card); cursor: pointer; transition: all 0.2s ease; }
+    #v-blockstage .drive-card:hover, #v-blockstage .drive-card.active { border-color: #dca842; background: rgba(220,168,66,0.06); }
+    #v-blockstage .drive-card h4 { margin: 0 0 4px; font-size: 1.05rem; }
+    #v-blockstage .drive-card p { margin: 0; font-size: 0.85rem; color: var(--text-muted); }
+
+    /* 7-Tier Progress */
+    #v-blockstage .tiers-wrap { margin-top: 2rem; }
+    #v-blockstage .tiers-bar-bg { height: 12px; border-radius: 999px; background: var(--border-subtle); overflow: hidden; margin-bottom: 1.5rem; position: relative; }
+    #v-blockstage .tiers-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #dca842, #0f766e); border-radius: 999px; transition: width 0.6s ease; }
+    #v-blockstage .tiers-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+    #v-blockstage .tier-col { padding: 12px 10px; border: 1px solid var(--border-subtle); border-radius: 6px; text-align: center; background: var(--bg-card); font-size: 0.85rem; }
+    #v-blockstage .tier-col.unlocked { border-color: #0f766e; background: rgba(15,118,110,0.1); }
+    #v-blockstage .tier-col .amt { font-weight: bold; color: #dca842; font-size: 0.95rem; }
+    #v-blockstage .tier-col.unlocked .amt { color: #0f766e; }
+
+    /* Modal Form */
+    .bs-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
+    .bs-modal.open { display: flex; }
+    .bs-modal-box { background: var(--bg-main, #ffffff); border: 1px solid var(--border-subtle); border-radius: 8px; max-width: 580px; width: 100%; padding: 28px; position: relative; max-height: 90vh; overflow-y: auto; }
+    .bs-modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
+  </style>
+
+  <!-- Hero -->
+  <section class="bs-hero band band--night">
+    <div class="wrap">
+      <div class="bs-badge">Block Stage Concert Program</div>
+      <h1 class="bs-title">Live music on your street, fully funded by your neighbors.</h1>
+      <p class="bs-lead">You pick the date and gather neighbors. We coordinate professional musicians, instruments, and live sound equipment. Fair wages guaranteed.</p>
+      <div class="bs-cta-row">
+        <button class="btn btn--solid" id="btnOpenBsModal">Book a Block Stage Concert</button>
+        <a class="btn btn--ghost" data-scroll="active-drives">See Active Neighborhood Drives</a>
+      </div>
+      <div class="bs-stats">
+        <div class="bs-stat"><div class="n">$850</div><div class="l">Baseline to Confirm Show</div></div>
+        <div class="bs-stat"><div class="n">100%</div><div class="l">Automatic Donor Refunds</div></div>
+        <div class="bs-stat"><div class="n">7 Tiers</div><div class="l">Solo Acoustic up to 7-Piece Band</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works (3 Steps) -->
+  <section class="band">
+    <div class="wrap">
+      <div class="section-head" style="text-align:center;max-width:540px;margin:0 auto 2rem;">
+        <p class="phead__ey" style="color:#dca842;text-transform:uppercase;letter-spacing:0.08em;font-size:0.85rem;font-weight:bold;">Effortless Production</p>
+        <h2 style="font-size:clamp(1.8rem,4vw,2.4rem);margin:0 0 10px;">Three steps to music on your block.</h2>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="num">01</div>
+          <h3>Initiate Your Street Drive</h3>
+          <p>Submit your preferred date and street. We create your dedicated Givebutter drive and generate an 8.5" x 11" printable flyer with a custom QR code.</p>
+        </div>
+        <div class="step-card">
+          <div class="num">02</div>
+          <h3>Pool Micro-Pledges</h3>
+          <p>Share the flyer and drive on Nextdoor or your block listserv. Small pledges ($50–$100 per household) quickly unlock the $850 baseline to confirm the show.</p>
+        </div>
+        <div class="step-card">
+          <div class="num">03</div>
+          <h3>Show Up & Enjoy</h3>
+          <p>We coordinate union-scale musicians and sound equipment directly to your block. Just plug in an outdoor extension cord and enjoy the music.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Active Drives Hub & 7-Tier Tracker -->
+  <section class="band band--night" id="active-drives">
+    <div class="wrap">
+      <div class="section-head" style="text-align:center;max-width:600px;margin:0 auto;">
+        <p class="phead__ey" style="color:#dca842;text-transform:uppercase;letter-spacing:0.08em;font-size:0.85rem;font-weight:bold;">Live Neighborhood Hub</p>
+        <h2 style="font-size:clamp(1.8rem,4vw,2.4rem);margin:0 0 10px;">Browse active Seattle block parties.</h2>
+        <p style="color:var(--text-muted);font-size:0.95rem;">Select an upcoming block drive to view progress, unlock larger bands, or chip in.</p>
+      </div>
+
+      <div class="hub-container">
+        <!-- Left: Selected Campaign Detail & 7 Tiers -->
+        <div class="hub-main" style="padding:24px;border:1px solid var(--border-subtle);border-radius:8px;background:var(--bg-card);">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
+            <div>
+              <span id="bsActiveBadge" style="font-size:0.75rem;font-weight:bold;color:#0f766e;text-transform:uppercase;letter-spacing:0.08em;background:rgba(15,118,110,0.15);padding:4px 10px;border-radius:4px;">Active Drive</span>
+              <h3 id="bsActiveTitle" style="margin:8px 0 4px;font-size:1.4rem;">Loading block party...</h3>
+              <p id="bsActiveMeta" style="margin:0;font-size:0.85rem;color:var(--text-muted);">Organized by Community Champion</p>
+            </div>
+            <div style="text-align:right;">
+              <div id="bsActiveRaised" style="font-size:1.6rem;font-weight:bold;color:#dca842;">$0</div>
+              <div id="bsActiveGoal" style="font-size:0.8rem;color:var(--text-muted);">of $1,640 Stretch Goal</div>
+            </div>
+          </div>
+
+          <p id="bsActiveDesc" style="margin:16px 0;font-size:0.92rem;color:var(--text-muted);line-height:1.6;">Connecting neighbors through live, local, fair-wage music.</p>
+
+          <!-- 7-Tier Progress System -->
+          <div class="tiers-wrap">
+            <div style="display:flex;justify-content:space-between;font-size:0.85rem;font-weight:600;margin-bottom:6px;">
+              <span>Ensemble Milestones</span>
+              <span id="bsActiveStatus">Reaching for $850 Base Duo</span>
+            </div>
+            <div class="tiers-bar-bg">
+              <div class="tiers-bar-fill" id="bsProgressBar"></div>
+            </div>
+            <div class="tiers-grid" id="bsTiersGrid">
+              <!-- Rendered dynamically via JavaScript -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: List of Active Neighborhood Drives -->
+        <div class="hub-sidebar">
+          <h4 style="margin:0 0 12px;font-size:1rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);">Seattle Neighborhood Drives</h4>
+          <div class="drives-list" id="bsDrivesList">
+            <!-- Rendered dynamically via JavaScript -->
+          </div>
+          <div style="margin-top:16px;text-align:center;">
+            <a id="bsPledgeDirectBtn" href="https://givebutter.com" target="_blank" class="btn btn--solid" style="display:block;width:100%;text-align:center;">Pledge on Givebutter</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Intake / Booking Modal Form -->
+  <div class="bs-modal" id="bsIntakeModal">
+    <div class="bs-modal-box">
+      <button class="bs-modal-close" id="btnCloseBsModal">&times;</button>
+      <h3 style="margin:0 0 8px;font-size:1.4rem;">Book a Block Stage Concert</h3>
+      <p style="margin:0 0 20px;font-size:0.88rem;color:var(--text-muted);">Submit your street location and preferred date. We will provision your campaign drive and render your 8.5" x 11" printable PDF flyer with custom QR code.</p>
+
+      <form id="bsIntakeForm">
+        <div class="field" style="margin-bottom:14px;">
+          <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:4px;">Host / Champion Full Name</label>
+          <input type="text" name="champion_name" required placeholder="e.g. Sarah Miller" style="width:100%;padding:10px;border:1px solid var(--border-subtle);border-radius:4px;background:var(--bg-card);color:inherit;">
+        </div>
+
+        <div class="field" style="margin-bottom:14px;">
+          <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:4px;">Contact Email Address</label>
+          <input type="email" name="champion_email" required placeholder="name@example.com" style="width:100%;padding:10px;border:1px solid var(--border-subtle);border-radius:4px;background:var(--bg-card);color:inherit;">
+        </div>
+
+        <div class="field" style="margin-bottom:14px;">
+          <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:4px;">Neighborhood & Street Location</label>
+          <input type="text" name="neighborhood_title" required placeholder="e.g. Wedgwood on 35th Ave" style="width:100%;padding:10px;border:1px solid var(--border-subtle);border-radius:4px;background:var(--bg-card);color:inherit;">
+        </div>
+
+        <div class="field" style="margin-bottom:14px;">
+          <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:4px;">Target Event Date</label>
+          <input type="date" name="target_event_date" required style="width:100%;padding:10px;border:1px solid var(--border-subtle);border-radius:4px;background:var(--bg-card);color:inherit;">
+        </div>
+
+        <div class="field" style="margin-bottom:14px;">
+          <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:4px;">Music Style / Genre Preference</label>
+          <select name="genre_preference" style="width:100%;padding:10px;border:1px solid var(--border-subtle);border-radius:4px;background:var(--bg-card);color:inherit;">
+            <option value="Acoustic / Folk / Americana">Acoustic / Folk / Americana</option>
+            <option value="Jazz / Swing / Bossa Nova">Jazz / Swing / Bossa Nova</option>
+            <option value="Soul / Funk / R&B">Soul / Funk / R&B</option>
+            <option value="Indie Rock / Pop">Indie Rock / Pop</option>
+            <option value="Classical / Chamber Music">Classical / Chamber Music</option>
+            <option value="All-Ages / Family Friendly Dance">All-Ages / Family Friendly Dance</option>
+          </select>
+        </div>
+
+        <div class="field" style="margin-bottom:16px;">
+          <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:4px;">About Your Gathering (Optional)</label>
+          <textarea name="description" rows="3" placeholder="Tell neighbors what makes your block special..." style="width:100%;padding:10px;border:1px solid var(--border-subtle);border-radius:4px;background:var(--bg-card);color:inherit;resize:vertical;"></textarea>
+        </div>
+
+        <div style="background:rgba(220,168,66,0.1);padding:12px;border-radius:4px;border:1px solid rgba(220,168,66,0.3);margin-bottom:16px;font-size:0.82rem;line-height:1.5;">
+          <strong>100% Risk-Free Guarantee:</strong> Campaigns require an $850 Tier 1 baseline. If your block does not reach $850 by your date, no concert occurs and 100% of donor pledges are automatically refunded via Givebutter escrow.
+        </div>
+
+        <button type="submit" id="bsSubmitBtn" class="btn btn--solid" style="width:100%;padding:12px;font-size:1rem;">Create Campaign & Download Flyer</button>
+      </form>
+    </div>
+  </div>
+</main>
+
+
+<script>
+/* ============================================================
+   BLOCK STAGE NATIVE CLIENT CONTROLLER
+   ============================================================ */
+(function() {
+  const TIERS = [
+    { name: 'Solo Acoustic', cost: 500 },
+    { name: 'Duo (Base)', cost: 850 },
+    { name: 'Trio', cost: 1200 },
+    { name: 'Quartet', cost: 1640 },
+    { name: 'Quintet', cost: 2050 },
+    { name: 'Sextet', cost: 2450 },
+    { name: '7-Piece Big Band', cost: 2850 }
+  ];
+
+  let currentCampaigns = [];
+  let selectedCampaign = null;
+
+  async function fetchActiveDrives() {
+    try {
+      const res = await fetch('/api/campaigns/active');
+      const data = await res.json();
+      currentCampaigns = Array.isArray(data) ? data : [];
+      if (currentCampaigns.length > 0) {
+        selectCampaign(currentCampaigns[0]);
+      }
+      renderDrivesList();
+    } catch (err) {
+      console.warn('Could not load active drives:', err);
+    }
+  }
+
+  function renderDrivesList() {
+    const listEl = document.getElementById('bsDrivesList');
+    if (!listEl) return;
+    if (currentCampaigns.length === 0) {
+      listEl.innerHTML = '<p style="font-size:0.85rem;color:var(--text-muted);">No active drives right now. Be the first to initiate one!</p>';
+      return;
+    }
+    listEl.innerHTML = currentCampaigns.map((c, i) => `
+      <div class="drive-card ${selectedCampaign && selectedCampaign.id === c.id ? 'active' : ''}" data-idx="${i}">
+        <h4>${c.title}</h4>
+        <p>Target: ${c.target_event_date} · Raised $${c.raised.toLocaleString()}</p>
+      </div>
+    `).join('');
+
+    listEl.querySelectorAll('.drive-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const idx = parseInt(card.getAttribute('data-idx'), 10);
+        selectCampaign(currentCampaigns[idx]);
+      });
+    });
+  }
+
+  function selectCampaign(c) {
+    selectedCampaign = c;
+    const titleEl = document.getElementById('bsActiveTitle');
+    const metaEl = document.getElementById('bsActiveMeta');
+    const raisedEl = document.getElementById('bsActiveRaised');
+    const goalEl = document.getElementById('bsActiveGoal');
+    const descEl = document.getElementById('bsActiveDesc');
+    const barEl = document.getElementById('bsProgressBar');
+    const statusEl = document.getElementById('bsActiveStatus');
+    const pledgeBtn = document.getElementById('bsPledgeDirectBtn');
+
+    if (titleEl) titleEl.textContent = c.title;
+    if (metaEl) metaEl.textContent = `Target: ${c.target_event_date} · Champion: ${c.champion_name}`;
+    if (raisedEl) raisedEl.textContent = `$${c.raised.toLocaleString()}`;
+    if (goalEl) goalEl.textContent = `of $${c.goal.toLocaleString()} Stretch Goal`;
+    if (descEl) descEl.textContent = c.description;
+    if (pledgeBtn) pledgeBtn.href = c.url || 'https://givebutter.com';
+
+    const pct = Math.min(100, Math.round((c.raised / 2850) * 100));
+    if (barEl) barEl.style.width = pct + '%';
+
+    if (c.raised >= 2850) {
+      if (statusEl) statusEl.textContent = '🎉 7-Piece Big Band Fully Unlocked!';
+    } else if (c.raised >= 850) {
+      if (statusEl) statusEl.textContent = '✅ Show Confirmed! Pushing to Stretch Goals';
+    } else {
+      if (statusEl) statusEl.textContent = `Reaching for $850 Base Duo ($${850 - c.raised} to go)`;
+    }
+
+    renderTiersGrid(c.raised);
+    renderDrivesList();
+  }
+
+  function renderTiersGrid(raised) {
+    const gridEl = document.getElementById('bsTiersGrid');
+    if (!gridEl) return;
+    gridEl.innerHTML = TIERS.map(t => {
+      const unlocked = raised >= t.cost;
+      return `
+        <div class="tier-col ${unlocked ? 'unlocked' : ''}">
+          <div class="amt">$${t.cost.toLocaleString()}</div>
+          <div style="font-size:0.75rem;margin-top:2px;">${t.name}</div>
+          <div style="font-size:0.7rem;margin-top:4px;color:${unlocked ? '#0f766e' : 'var(--text-muted)'};">
+            ${unlocked ? '✓ Unlocked' : 'Locked'}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Modal Setup
+  const modalEl = document.getElementById('bsIntakeModal');
+  const btnOpen = document.getElementById('btnOpenBsModal');
+  const btnClose = document.getElementById('btnCloseBsModal');
+  const formEl = document.getElementById('bsIntakeForm');
+  const submitBtn = document.getElementById('bsSubmitBtn');
+
+  if (btnOpen && modalEl) btnOpen.addEventListener('click', () => modalEl.classList.add('open'));
+  if (btnClose && modalEl) btnClose.addEventListener('click', () => modalEl.classList.remove('open'));
+
+  if (formEl) {
+    formEl.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Provisioning & Generating Flyer...';
+      }
+
+      const formData = new FormData(formEl);
+      const payload = Object.fromEntries(formData.entries());
+
+      try {
+        const res = await fetch('/api/campaigns/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          if (modalEl) modalEl.classList.remove('open');
+          formEl.reset();
+
+          if (data.flyer_data_url || data.flyer_pdf_url) {
+            const a = document.createElement('a');
+            a.href = data.flyer_data_url || data.flyer_pdf_url;
+            a.download = `BlockStage-Flyer-${(payload.neighborhood_title || 'Block').replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+          }
+
+          alert('🎉 Congratulations! Your Block Stage campaign is live and your customized print-ready flyer has been downloaded. A confirmation email with the flyer attached has also been sent to ' + payload.champion_email);
+          fetchActiveDrives();
+        } else {
+          alert('Error: ' + (data.message || 'Could not provision campaign.'));
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Submission failed. Please check your network connection.');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Create Campaign & Download Flyer';
+        }
+      }
+    });
+  }
+
+  // Hook into SPA View Router changes
+  const origShowView = window.showView;
+  if (typeof origShowView === 'function') {
+    window.showView = function(name, scrollTarget) {
+      origShowView(name, scrollTarget);
+      if (name === 'blockstage') {
+        fetchActiveDrives();
+      }
+    };
+  }
+
+  // Initial call on document ready
+  document.addEventListener('DOMContentLoaded', () => {
+    fetchActiveDrives();
+  });
 })();
 </script>
 
