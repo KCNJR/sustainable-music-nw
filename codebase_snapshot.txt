@@ -1,0 +1,617 @@
+=== REPO STATUS & TREE ===
+?? codebase_snapshot.txt
+total 6648
+drwxr-xr-x@ 22 kevin  staff      704 Nov  7 23:32 .
+drwxr-xr-x   3 kevin  staff       96 Nov  5 09:37 ..
+-rw-r--r--@  1 kevin  staff     6148 Nov  6 18:36 .DS_Store
+drwxr-xr-x  15 kevin  staff      480 Nov  7 23:32 .git
+-rw-r--r--   1 kevin  staff       49 Nov  5 09:37 .gitignore
+-rw-r--r--   1 kevin  staff     9162 Nov  5 09:37 admin.html
+-rw-r--r--@  1 kevin  staff   180438 Oct 28 13:35 afm-logo.png
+drwxr-xr-x  12 kevin  staff      384 Nov  7 22:49 api
+-rw-r--r--@  1 kevin  staff    52936 Nov  7 10:12 benevity-logo.png
+-rw-r--r--   1 kevin  staff    10305 Nov  7 23:12 blockstage-client.js
+-rw-r--r--@  1 kevin  staff    65769 Nov  7 23:12 blockstage.html
+-rw-r--r--@  1 kevin  staff     2540 Nov  7 10:14 candid-logo.svg
+-rw-r--r--   1 kevin  staff        0 Nov  7 23:32 codebase_snapshot.txt
+-rw-r--r--@  1 kevin  staff    66543 Oct 28 13:36 givebutter-logo.png
+-rw-r--r--   1 kevin  staff  2650380 Nov  7 22:39 index.html
+-rw-r--r--@  1 kevin  staff    95246 Apr 29  2026 mptf-logo.jpg
+-rw-r--r--   1 kevin  staff     1897 Nov  6 10:46 README.md
+-rw-r--r--   1 kevin  staff   173362 Oct 24 15:02 SMNW-circle-logo.png
+-rw-r--r--   1 kevin  staff     8231 Oct 24 15:02 SMNW-Horz-Logo-600px.jpg
+drwxr-xr-x   3 kevin  staff       96 Oct 31 15:21 templates
+-rw-r--r--@  1 kevin  staff    36085 Apr 29  2026 union-logo.png
+-rw-r--r--   1 kevin  staff      220 Nov  7 22:41 vercel.json
+total 120
+drwxr-xr-x  12 kevin  staff    384 Nov  7 22:49 .
+drwxr-xr-x@ 22 kevin  staff    704 Nov  7 23:32 ..
+-rw-r--r--   1 kevin  staff   1322 Nov  5 09:37 admin.js
+-rw-r--r--   1 kevin  staff   1835 Nov  7 22:40 campaigns-active.js
+-rw-r--r--   1 kevin  staff   6238 Nov  7 22:52 campaigns-create.js
+-rw-r--r--   1 kevin  staff   2646 Nov  5 09:37 content.js
+-rw-r--r--   1 kevin  staff  11582 Nov  1 17:17 emailEngine.js
+-rw-r--r--   1 kevin  staff   5069 Nov  5 09:37 events.js
+-rw-r--r--   1 kevin  staff   4769 Oct 30 16:22 flyerEngine.js
+-rw-r--r--   1 kevin  staff   1128 Nov  5 09:37 photo.js
+-rw-r--r--   1 kevin  staff   1894 Nov  7 22:39 submit.js
+-rw-r--r--   1 kevin  staff   1566 Nov  5 09:37 upload.js
+
+
+=== FILE: package.json ===
+[FILE DOES NOT EXIST]
+
+
+=== FILE: vercel.json ===
+{
+  "rewrites": [
+    {
+      "source": "/api/campaigns/create",
+      "destination": "/api/campaigns-create"
+    },
+    {
+      "source": "/api/campaigns/active",
+      "destination": "/api/campaigns-active"
+    }
+  ]
+}
+
+=== FILE: api/submit.js ===
+// Receives roster, mailing-list, and community/volunteer submissions and stores them in Vercel KV
+// (Upstash Redis) via the REST API. No dependencies, plain fetch.
+
+const URL_ = process.env.KV_REST_API_URL;
+const TOKEN = process.env.KV_REST_API_TOKEN;
+
+async function kv(cmd) {
+  const r = await fetch(URL_, {
+    method: 'POST',
+    headers: { Authorization: 'Bearer ' + TOKEN, 'Content-Type': 'application/json' },
+    body: JSON.stringify(cmd),
+  });
+  return r.json();
+}
+
+const clip = (s, n) => (s || '').toString().trim().slice(0, n);
+
+module.exports = async function handler(req, res) {
+  if (req.method !== 'POST') { res.status(405).json({ error: 'method' }); return; }
+  if (!URL_ || !TOKEN) { res.status(500).json({ error: 'store not configured' }); return; }
+
+  let b = req.body;
+  if (!b || typeof b === 'string') { try { b = JSON.parse(b || '{}'); } catch (e) { b = {}; } }
+
+  const email = clip(b.email, 200);
+  if (!email || email.indexOf('@') < 0) { res.status(400).json({ error: 'email required' }); return; }
+
+  let type = 'roster';
+  if (b.type === 'mailing') type = 'mailing';
+  else if (b.type === 'community' || b.type === 'contact') type = 'community';
+
+  let rec;
+  if (type === 'mailing') {
+    rec = { ts: Date.now(), email };
+  } else if (type === 'community') {
+    rec = {
+      ts: Date.now(),
+      name: clip(b.name, 200),
+      email,
+      interest: clip(b.subject || b.interest, 200),
+      message: clip(b.message, 3000)
+    };
+  } else {
+    rec = {
+      ts: Date.now(),
+      name: clip(b.name, 200),
+      email,
+      act: clip(b.act, 200),
+      discipline: clip(b.discipline, 200),
+      links: clip(b.links, 500),
+      notes: clip(b.notes, 2000)
+    };
+  }
+
+  try {
+    await kv(['RPUSH', 'smnw:' + type, JSON.stringify(rec)]);
+    res.status(200).json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: 'save failed' });
+  }
+};
+
+
+=== FILE: api/campaigns-create.js ===
+const fs = require('fs');
+const path = require('path');
+const os = require('os');
+const axios = require('axios');
+const { generateBlockStageFlyer } = require('./flyerEngine');
+const { sendChampionWelcomeEmail } = require('./emailEngine');
+
+// Serverless-safe temporary directory for generated PDFs
+const storageDir = os.tmpdir();
+
+function parseMultipartOrJson(req) {
+  return new Promise((resolve) => {
+    let raw = '';
+    req.on('data', chunk => raw += chunk);
+    req.on('end', () => {
+      const contentType = req.headers['content-type'] || '';
+      const fields = {};
+
+      if (contentType.includes('application/json')) {
+        try { Object.assign(fields, JSON.parse(raw)); } catch(e) {}
+      } else if (contentType.includes('multipart/form-data')) {
+        const boundaryMatch = contentType.match(/boundary=(?:"([^"]+)"|([^;]+))/i);
+        const boundary = boundaryMatch ? (boundaryMatch[1] || boundaryMatch[2]) : null;
+        if (boundary) {
+          const parts = raw.split('--' + boundary);
+          for (const part of parts) {
+            const nameMatch = part.match(/name="([^"]+)"/);
+            if (nameMatch) {
+              const fieldName = nameMatch[1];
+              const bodyStart = part.indexOf('\r\n\r\n');
+              if (bodyStart !== -1) {
+                // If this part is a file, skip body text extraction here
+                if (!part.includes('filename=')) {
+                  const val = part.slice(bodyStart + 4).replace(/\r\n$/, '').trim();
+                  fields[fieldName] = val;
+                }
+              }
+            }
+          }
+        }
+      } else if (req.body && typeof req.body === 'object') {
+        Object.assign(fields, req.body);
+      }
+      resolve(fields);
+    });
+  });
+}
+
+module.exports = async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ success: false, message: 'Method not allowed' });
+
+  try {
+    const campaignData = await parseMultipartOrJson(req);
+
+    const championName = campaignData.champion_name || campaignData.name || 'Community Champion';
+    const championEmail = campaignData.champion_email || campaignData.email || 'info@sustainablemusicnw.org';
+    const neighborhoodTitle = campaignData.neighborhood_title || campaignData.neighborhood || 'Block Party';
+    const targetDate = campaignData.target_event_date || campaignData.date || 'Upcoming 2026';
+    const customDesc = campaignData.description || 
+      `Funding live, fair-wage music on our street in ${neighborhoodTitle} with Sustainable Music Northwest!`;
+
+    const campaignId = `cmp_${Date.now()}`;
+    const pdfFileName = `Flyer-${campaignId}.pdf`;
+    const pdfFilePath = path.join(storageDir, pdfFileName);
+
+    let givebutterUrl = `https://givebutter.com/blockstage-${campaignId}`;
+    let givebutterCode = `gb_${campaignId}`;
+
+    // 1. Provision Givebutter campaign
+    const apiKey = process.env.GIVEBUTTER_API_KEY ? process.env.GIVEBUTTER_API_KEY.trim() : null;
+    if (apiKey) {
+      try {
+        const gbPayload = {
+          title: `${neighborhoodTitle} Block Stage Concert`,
+          description: customDesc,
+          goal: 1500,
+          type: 'fundraise'
+        };
+
+        const gbResponse = await axios.post(
+          'https://api.givebutter.com/v1/campaigns',
+          gbPayload,
+          {
+            headers: {
+              'Authorization': `Bearer ${apiKey}`,
+              'Content-Type': 'application/json'
+            },
+            timeout: 9000
+          }
+        );
+
+        givebutterUrl = gbResponse.data?.data?.url || gbResponse.data?.url || gbResponse.data?.link || givebutterUrl;
+        givebutterCode = gbResponse.data?.data?.code || gbResponse.data?.code || gbResponse.data?.id || givebutterCode;
+      } catch (gbErr) {
+        console.warn('Givebutter provisioning warning (using fallback):', gbErr.response ? gbErr.response.data : gbErr.message);
+      }
+    }
+
+    // 2. Render dynamic PDF flyer via flyerEngine
+    let flyerDataUri = null;
+    try {
+      const pdfBuffer = await generateBlockStageFlyer({
+        champion_name: championName,
+        champion_email: championEmail,
+        neighborhood_title: neighborhoodTitle,
+        target_event_date: targetDate,
+        description: customDesc,
+        givebutter_url: givebutterUrl
+      }, pdfFilePath);
+
+      // Encode buffer directly as a data URI so downloads work in serverless without disk persistence
+      const base64Pdf = Buffer.isBuffer(pdfBuffer) 
+        ? pdfBuffer.toString('base64') 
+        : (fs.existsSync(pdfFilePath) ? fs.readFileSync(pdfFilePath).toString('base64') : null);
+
+      if (base64Pdf) {
+        flyerDataUri = `data:application/pdf;base64,${base64Pdf}`;
+      }
+    } catch (flyerErr) {
+      console.error('Flyer generation warning:', flyerErr.message);
+    }
+
+    // 3. Dispatch champion welcome email via emailEngine
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+      try {
+        await sendChampionWelcomeEmail({
+          champion_name: championName,
+          champion_email: championEmail,
+          neighborhood_title: neighborhoodTitle,
+          target_event_date: targetDate,
+          givebutter_url: givebutterUrl
+        }, pdfFilePath);
+        console.log(`Welcome email successfully dispatched to ${championEmail}`);
+      } catch (emailErr) {
+        console.error('SMTP Email Error (non-blocking):', emailErr.message);
+      }
+    }
+
+    // 4. Return success response to browser
+    return res.status(200).json({
+      success: true,
+      campaign_id: campaignId,
+      givebutter_code: givebutterCode,
+      givebutter_url: givebutterUrl,
+      flyer_pdf_url: flyerDataUri || `/storage/${pdfFileName}`,
+      message: 'Campaign provisioned and flyer generated successfully.'
+    });
+
+  } catch (err) {
+    console.error('Error creating campaign:', err);
+    return res.status(500).json({ 
+      success: false, 
+      message: err.message || 'Failed to provision campaign and render flyer.' 
+    });
+  }
+};
+
+
+=== FILE: api/campaigns-active.js ===
+const axios = require('axios');
+
+module.exports = async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  if (req.method === 'OPTIONS') return res.status(200).end();
+
+  try {
+    const apiKey = process.env.GIVEBUTTER_API_KEY ? process.env.GIVEBUTTER_API_KEY.trim() : null;
+
+    if (apiKey) {
+      const gbResponse = await axios.get('https://api.givebutter.com/v1/campaigns', {
+        headers: { 'Authorization': `Bearer ${apiKey}` },
+        timeout: 8000
+      });
+
+      const allCampaigns = gbResponse.data?.data || gbResponse.data || [];
+
+      const blockStageCampaigns = allCampaigns.filter(c => {
+        const title = (c.title || '').toLowerCase();
+        const isStatusActive = (c.status === 'active' || c.status === 'ACTIVE');
+        const isExcluded = title.includes('general donations') || 
+                           title.includes('annual fund') || 
+                           title.includes('spring fundraiser') || 
+                           title.includes('master template');
+        return isStatusActive && !isExcluded;
+      });
+
+      return res.status(200).json(blockStageCampaigns);
+    }
+
+    // Default drives if no key is configured
+    return res.status(200).json([
+      {
+        id: "wedgwood",
+        campaign_id: "wedgwood",
+        neighborhood_title: "Wedgwood Summer Block Party",
+        champion_name: "Sarah M.",
+        target_event_date: "July 15, 2026",
+        amount_raised: 850,
+        givebutter_url: "https://givebutter.com",
+        description: "Bringing live acoustic soul and jazz to 35th Ave!"
+      }
+    ]);
+  } catch (err) {
+    console.error('Error fetching Givebutter campaigns:', err.response ? err.response.data : err.message);
+    return res.status(200).json([]);
+  }
+};
+
+
+=== FILE: api/flyerEngine.js ===
+// flyerEngine.js
+const PDFDocument = require('pdfkit');
+const QRCode = require('qrcode');
+const fs = require('fs');
+const path = require('path');
+
+/**
+ * Dynamically measures rendered string height inside PDFKit to guarantee headline fit.
+ */
+function calculateDynamicFontSize(doc, text, maxWidth, maxHeight) {
+    let fontSize = 28;
+    while (fontSize > 12) {
+        doc.fontSize(fontSize).font('Helvetica-Bold');
+        const height = doc.heightOfString(text, { width: maxWidth, lineGap: -1 });
+        if (height <= maxHeight) break;
+        fontSize -= 1;
+    }
+    let yPos = 188;
+    if (fontSize < 16) yPos = 182;
+    else if (fontSize < 22) yPos = 184;
+    else if (fontSize < 26) yPos = 186;
+    return { fontSize, yPos };
+}
+
+/**
+ * Generates an 8.5" x 11" flyer returning a Buffer with full 7-tier alignment.
+ */
+async function generateBlockStageFlyer(campaignData, outputPath = null) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const doc = new PDFDocument({ size: 'LETTER', margin: 0 });
+            const buffers = [];
+
+            doc.on('data', buffers.push.bind(buffers));
+            doc.on('end', () => {
+                const pdfBuffer = Buffer.concat(buffers);
+                if (outputPath) {
+                    try {
+                        fs.writeFileSync(outputPath, pdfBuffer);
+                    } catch (e) {
+                        console.warn('Could not write flyer to filesystem path:', e.message);
+                    }
+                }
+                resolve(pdfBuffer);
+            });
+
+            // 1. Render Base Background Graphic
+            const possiblePaths = [
+                path.join(__dirname, 'templates', 'New Template Block Stage.jpg'),
+                path.join(__dirname, 'New Template Block Stage.jpg'),
+                path.join(process.cwd(), 'templates', 'New Template Block Stage.jpg'),
+                path.join(process.cwd(), 'New Template Block Stage.jpg')
+            ];
+
+            const templatePath = possiblePaths.find(p => fs.existsSync(p));
+
+            if (templatePath) {
+                doc.image(templatePath, 0, 0, { width: 612, height: 792 });
+            } else {
+                // Layout Canvas fallback if image is not located
+                doc.rect(0, 0, 612, 792).fill('#F8F7F4');
+                doc.fillColor('#18181B').font('Helvetica-Bold').fontSize(24).text('BLOCK STAGE CONCERT', 50, 40);
+            }
+
+            // 2. Headline Overlay
+            const rawTitle = campaignData.neighborhood_title ? campaignData.neighborhood_title.trim() : 'OUR BLOCK';
+            const headlineText = `${rawTitle.toUpperCase()}!`;
+            const { fontSize, yPos } = calculateDynamicFontSize(doc, headlineText, 521.28, 52);
+
+            doc.fillColor('#182723')
+               .font('Helvetica-Bold')
+               .fontSize(fontSize)
+               .text(headlineText, 43.2, yPos, {
+                   width: 521.28,
+                   height: 52,
+                   align: 'center',
+                   lineGap: -1,
+                   ellipsis: true
+               });
+
+            // 3. Cutoff Date Overlay
+            const cutoffDate = campaignData.target_event_date || 'Upcoming 2026';
+            doc.fillColor('#182723')
+               .font('Helvetica-Bold')
+               .fontSize(18)
+               .text(cutoffDate, 233.5, 245, {
+                   width: 194.9,
+                   align: 'left'
+               });
+
+            // 4. Host Name Overlay
+            const champName = campaignData.champion_name || 'Community Host';
+            doc.fillColor('#E85E2F')
+               .font('Helvetica')
+               .fontSize(15)
+               .text(champName, 44.4, 700, {
+                   width: 191.3,
+                   align: 'center'
+               });
+
+            // 5. Host Email Overlay
+            const champEmail = campaignData.champion_email || 'info@sustainablemusicnw.org';
+            doc.fillColor('#E85E2F')
+               .font('Helvetica')
+               .fontSize(15)
+               .text(champEmail, 256.1, 700, {
+                   width: 191.3,
+                   align: 'center'
+               });
+
+            // 6. Dynamic QR Code Overlay
+            const pledgeUrl = campaignData.givebutter_url || 'https://givebutter.com';
+            const qrBuffer = await QRCode.toBuffer(pledgeUrl, {
+                width: 200,
+                margin: 1,
+                color: {
+                    dark: '#182723',
+                    light: '#FFFFFF'
+                }
+            });
+
+            doc.image(qrBuffer, 468.1, 632.7, { width: 104.4, height: 104.4 });
+
+            doc.end();
+        } catch (err) {
+            reject(err);
+        }
+    });
+}
+
+module.exports = { generateBlockStageFlyer };
+
+=== FILE: api/emailEngine.js ===
+// emailEngine.js
+const nodemailer = require('nodemailer');
+const fs = require('fs');
+
+const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST || process.env.SMTP_HOST || 'smtp.gmail.com',
+    port: parseInt(process.env.EMAIL_PORT || process.env.SMTP_PORT || '587', 10),
+    secure: (process.env.EMAIL_SECURE === 'true' || process.env.SMTP_SECURE === 'true'),
+    auth: {
+        user: process.env.EMAIL_USER || process.env.SMTP_USER,
+        pass: process.env.EMAIL_PASS || process.env.SMTP_PASS
+    }
+});
+
+async function sendChampionWelcomeEmail(campaignData, flyerAttachment) {
+    const championName = campaignData.champion_name || 'Neighborhood Champion';
+    const championEmail = campaignData.champion_email;
+    const blockTitle = campaignData.neighborhood_title || 'Your Block Party';
+    const givebutterUrl = campaignData.givebutter_url || 'https://givebutter.com';
+    const eventDate = campaignData.target_event_date || 'Upcoming 2026';
+
+    const attachments = [];
+    if (Buffer.isBuffer(flyerAttachment)) {
+        attachments.push({
+            filename: `BlockStage-Flyer-${blockTitle.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`,
+            content: flyerAttachment
+        });
+    } else if (typeof flyerAttachment === 'string' && fs.existsSync(flyerAttachment)) {
+        attachments.push({
+            filename: `BlockStage-Flyer-${blockTitle.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`,
+            path: flyerAttachment
+        });
+    }
+
+    const mailOptions = {
+        from: '"Kevin / Sustainable Music Northwest" <info@sustainablemusicnw.org>',
+        to: championEmail,
+        replyTo: 'info@sustainablemusicnw.org',
+        subject: `Your Block Stage Campaign is Live! — ${blockTitle}`,
+        text: `Hi ${championName},
+
+Thank you so much for starting a Block Stage campaign for ${blockTitle}! We are thrilled to partner with you to bring live, fair-wage music directly onto your street.
+
+Your campaign dashboard & resources:
+• Live Givebutter Drive: ${givebutterUrl}
+• Main Block Stage Hub: https://sustainablemusicnw.org/blockstage
+• Target Event Date: ${eventDate}
+
+Your Print-Ready Flyer is Attached:
+We have attached your customized 8.5" x 11" promotional flyer directly to this email with a custom QR code pointing straight to your Givebutter page. Print a few out to post on light poles or hand out to neighbors!
+
+Courtesy Checklist: Hosting a Simple Block Party
+While we take care of coordinating the musicians, instruments, and live sound equipment, setting up your neighborhood block party is managed directly by you and your neighbors. Here are common practices most Seattle blocks follow:
+1. Get a Free SDOT Block Party Permit: If you are gathering on a residential street, the City of Seattle offers simple block party permits via the SDOT portal (apply online 14–30 days in advance).
+2. Notify Immediate Neighbors: Circulate a quick note or flyer to let everyone on the block know the date and hours.
+3. Closing Off Residential Streets: Use temporary barricades or visible traffic cones at both ends of the block during party hours. Keep them easy to move for resident driveway access and emergency vehicles.
+4. Power for the Band: Musicians bring their own equipment. Make sure an accessible outdoor extension cord or outlet is available nearby!
+
+100% Risk-Free Guarantee:
+Campaigns require an $850 Tier 1 baseline to confirm the show. If your block does not reach $850 by the cutoff date, no event occurs and 100% of pledges are automatically refunded back to donors via Givebutter. Zero risk for you or your neighbors!
+
+📸 Want a custom photo on your drive?
+Simply reply to this email with a photo of your street, block party, or neighbors, and we'll format and add it directly to your Givebutter page!
+
+Warmly,
+
+Kevin
+Founder / Director, Sustainable Music Northwest
+info@sustainablemusicnw.org
+https://sustainablemusicnw.org`,
+        html: `
+            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333333; max-width: 620px; margin: 0 auto; border: 1px solid #e0ded9; border-radius: 8px; overflow: hidden; background-color: #ffffff;">
+                <!-- Header -->
+                <div style="background-color: #1e1b18; padding: 24px 32px; border-bottom: 4px solid #dca842;">
+                    <h1 style="color: #dca842; margin: 0; font-size: 1.3rem; text-transform: uppercase; letter-spacing: 0.08em;">Sustainable Music NW</h1>
+                    <p style="color: #a39c93; margin: 4px 0 0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Block Stage Neighborhood Concert Program</p>
+                </div>
+
+                <!-- Body Content -->
+                <div style="padding: 28px 32px;">
+                    <p style="font-size: 1.05rem; font-weight: bold; margin-top: 0;">Hi ${championName},</p>
+
+                    <p>Thank you so much for stepping up as a Champion to initiate a Block Stage concert drive for <strong>${blockTitle}</strong>! We are thrilled to partner with you to bring live, fair-wage music into your neighborhood living room.</p>
+
+                    <!-- Important Links Box -->
+                    <div style="background-color: #faf9f6; border-left: 4px solid #dca842; padding: 16px 20px; margin: 20px 0; border-radius: 0 6px 6px 0;">
+                        <p style="margin: 0 0 8px 0; font-size: 0.95rem;"><strong>Important Campaign Links:</strong></p>
+                        <p style="margin: 0 0 6px 0;">👉 <strong>Your Live Givebutter Drive:</strong> <a href="${givebutterUrl}" target="_blank" style="color: #0f766e; font-weight: bold; text-decoration: underline;">${givebutterUrl}</a></p>
+                        <p style="margin: 0;">🌐 <strong>Our Main Block Stage Hub:</strong> <a href="https://sustainablemusicnw.org/blockstage" target="_blank" style="color: #0f766e; font-weight: bold; text-decoration: underline;">sustainablemusicnw.org/blockstage</a></p>
+                    </div>
+
+                    <p>📄 <strong>Your Print-Ready Flyer is Attached:</strong><br>
+                    We have attached your customized 8.5" x 11" promotional flyer directly to this email. It includes dynamic micro-math household breakdowns and a custom QR code encoded straight to your Givebutter page. Print a few out to post on light poles or hand out to neighbors!</p>
+
+                    <!-- Custom Photo Callout Box -->
+                    <div style="background-color: #fffdf5; border: 1px dashed #dca842; border-left: 4px solid #dca842; padding: 14px 18px; margin: 20px 0; border-radius: 0 6px 6px 0;">
+                        <p style="margin: 0 0 4px 0; font-weight: bold; color: #1e1b18; font-size: 0.92rem;">📸 Want a custom photo on your drive?</p>
+                        <p style="margin: 0; font-size: 0.88rem; color: #58595B;">Simply reply to this email with a photo of your street, block party, or neighbors, and we'll format and add it directly to your Givebutter page!</p>
+                    </div>
+
+                    <!-- Courtesy Checklist -->
+                    <div style="background-color: #f0f7f9; border-left: 4px solid #0f766e; padding: 18px 20px; margin: 24px 0; border-radius: 0 6px 6px 0; font-size: 0.9rem; color: #443e37;">
+                        <h4 style="margin: 0 0 10px; color: #0f766e; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">Courtesy Checklist: Hosting a Simple Block Party</h4>
+                        <p style="margin: 0 0 10px; font-size: 0.88rem; color: #58595B;">While we coordinate the musicians, instruments, and live sound equipment, setting up your neighborhood gathering is organized directly by you and your neighbors. Here are common practices most Seattle blocks follow:</p>
+                        <ol style="margin: 0; padding-left: 20px; line-height: 1.6;">
+                            <li style="margin-bottom: 6px;"><strong>Free SDOT Block Party Permit:</strong> If planning a residential street closure, the City of Seattle offers simple, free block party permits through SDOT (submitted online 14–30 days in advance by a resident of the block).</li>
+                            <li style="margin-bottom: 6px;"><strong>Notify Immediate Neighbors:</strong> Circulate a quick note or flyer to let everyone on the block know the date and hours so folks can plan parking and access.</li>
+                            <li style="margin-bottom: 6px;"><strong>Closing Off Residential Streets:</strong> Position temporary street closure barricades or visible traffic cones at both ends of the block during party hours. Keep them easy to slide aside for local resident driveway access and emergency vehicles.</li>
+                            <li><strong>Power for the Band:</strong> Musicians bring their own equipment. Make sure an accessible outdoor extension cord or exterior wall outlet from a neighboring house or garage is identified nearby!</li>
+                        </ol>
+                    </div>
+
+                    <h3 style="color: #1e1b18; font-size: 1.05rem; text-transform: uppercase; margin-bottom: 0.4rem;">Why We Do This</h3>
+                    <p style="font-size: 0.9rem; color: #58595B; margin-top: 0;">At Sustainable Music Northwest, our mission is to decentralize the arts and pay professional musicians fair, union-scale wages. By pooling small pledges across a block, neighborhood concerts become effortless community achievements.</p>
+
+                    <h3 style="color: #1e1b18; font-size: 1.05rem; text-transform: uppercase; margin-bottom: 0.4rem;">100% Risk-Free Guarantee</h3>
+                    <p style="font-size: 0.9rem; color: #58595B; margin-top: 0;">Campaigns require an $850 Tier 1 baseline to confirm the show. If your block does not reach $850 by the cutoff date, no event occurs and <strong>100% of pledges are automatically refunded back to donors</strong> via Givebutter. Zero risk for you or your neighbors!</p>
+
+                    <p style="margin-top: 1.5rem; font-size: 0.92rem; color: #58595B;">If you have any questions or need help sharing your campaign on Nextdoor or email listservs, please reach out to me directly.</p>
+
+                    <!-- Signature -->
+                    <div style="border-top: 2px solid #dca842; padding-top: 1rem; margin-top: 1.5rem;">
+                        <p style="margin: 0; font-weight: bold; color: #1e1b18; font-size: 1.05rem;">Kevin</p>
+                        <p style="margin: 0; color: #0f766e; font-weight: 600; font-size: 0.9rem;">Founder / Director, Sustainable Music Northwest</p>
+                        <p style="margin: 0.3rem 0 0 0; font-size: 0.85rem; color: #58595B;">
+                            ✉️ <a href="mailto:info@sustainablemusicnw.org" style="color: #0f766e; text-decoration: none;">info@sustainablemusicnw.org</a><br>
+                            🌐 <a href="https://sustainablemusicnw.org" target="_blank" style="color: #0f766e; text-decoration: none;">sustainablemusicnw.org</a>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Footer Bar -->
+                <div style="background-color: #ede8df; padding: 14px 20px; text-align: center; font-size: 0.78rem; color: #746c62;">
+                    © 2026 Sustainable Music Northwest · 501(c)(3) Nonprofit Cultural Organization · Seattle, WA
+                </div>
+            </div>
+        `,
+        attachments
+    };
+
+    return await transporter.sendMail(mailOptions);
+}
+
+module.exports = { sendChampionWelcomeEmail };
+
