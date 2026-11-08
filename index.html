@@ -805,7 +805,7 @@ body.editing .evcard:hover .ev-adm{opacity:1}
       <h2 class="h-section reveal" data-edit="c21">Pick the door that fits you.</h2>
       <div class="doors">
         <div class="door reveal" style="--d:0s"><span class="door__no" data-edit="dn1">Door 01</span><h3 data-edit="c22">Host an event</h3><p data-edit="c23">Ready to bring music to life in your neighborhood? We supply the right performers and the on-the-ground support. You bring the block.</p><a href="/blockstage.html" class="btn btn--ghost" data-edit="b3">How it works</a></div>
-        <div class="door reveal" style="--d:.1s"><span class="door__no" data-edit="dn2">Door 02</span><h3 data-edit="c24">Get involved</h3><p data-edit="c25">Join our mailing list, volunteer at upcoming shows, join our advisory board, or simply reach out to say hello.</p><a class="btn btn--ghost" data-go="about" data-edit="b4">Get in touch</a></div>
+        <div class="door reveal" style="--d:.1s"><span class="door__no" data-edit="dn2">Door 02</span><h3 data-edit="c24">Get involved</h3><p data-edit="c25">Join our mailing list, volunteer at upcoming shows, join our advisory board, or simply reach out to say hello.</p><a class="btn btn--ghost" data-go="about" data-scroll="contact" data-edit="b4">Get in touch</a></div>
         <div class="door reveal" style="--d:.2s"><span class="door__no" data-edit="dn3">Door 03</span><h3 data-edit="c26">Donate</h3><p data-edit="c27">Your gift pays musicians fairly and puts live music on more blocks. Tax-deductible to the full extent of the law.</p><a class="btn btn--solid" data-go="donate" data-edit="b5">Give now</a></div>
       </div>
     </div>
@@ -997,6 +997,54 @@ body.editing .evcard:hover .ev-adm{opacity:1}
       </div>
     </div>
   </section>
+
+  <!-- Get in Touch / Community Engagement Section -->
+  <section class="band band--night" id="contact" style="border-top:1px solid rgba(220,168,66,0.15)">
+    <div class="wrap wrap--narrow">
+      <p class="eyebrow reveal" style="text-align:center;color:var(--brand-gold,#dca842)">Connect with us</p>
+      <h2 class="h-section reveal" style="text-align:center;margin-bottom:0.75rem">Say hello, volunteer, or join the board.</h2>
+      <p class="reveal" style="text-align:center;max-width:52ch;margin:0 auto 2.5rem;color:var(--text-muted,#a39c93)">
+        Whether you want to volunteer at upcoming neighborhood shows, explore board and committee roles, or simply learn more about our work in Seattle, we'd love to hear from you.
+      </p>
+
+      <form class="form reveal" action="mailto:info@sustainablemusicnw.org" method="POST" enctype="text/plain" style="max-width:540px;margin:0 auto;display:flex;flex-direction:column;gap:1.1rem">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div class="field">
+            <label style="display:block;font-size:0.82rem;font-weight:600;margin-bottom:0.35rem">Your Name</label>
+            <input type="text" name="name" required placeholder="Jane Doe" style="width:100%;padding:0.65rem 0.85rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:inherit">
+          </div>
+          <div class="field">
+            <label style="display:block;font-size:0.82rem;font-weight:600;margin-bottom:0.35rem">Email Address</label>
+            <input type="email" name="email" required placeholder="jane@example.com" style="width:100%;padding:0.65rem 0.85rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:inherit">
+          </div>
+        </div>
+
+        <div class="field">
+          <label style="display:block;font-size:0.82rem;font-weight:600;margin-bottom:0.35rem">What are you interested in?</label>
+          <select name="subject" style="width:100%;padding:0.65rem 0.85rem;background:#151b22;border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:inherit">
+            <option value="General Hello">Just reaching out to say hello</option>
+            <option value="Volunteering">Volunteering at upcoming concerts</option>
+            <option value="Board / Advisory">Joining our board or committee</option>
+            <option value="Community Partnership">Community / Neighborhood Partnership</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label style="display:block;font-size:0.82rem;font-weight:600;margin-bottom:0.35rem">Message</label>
+          <textarea name="message" rows="4" required placeholder="Tell us a bit about yourself or how you would like to connect..." style="width:100%;padding:0.65rem 0.85rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:inherit"></textarea>
+        </div>
+
+        <div style="text-align:center;margin-top:0.5rem">
+          <button type="submit" class="btn btn--solid" style="padding:0.8rem 2.2rem;font-weight:700">Send message</button>
+        </div>
+
+        <p style="font-size:0.8rem;text-align:center;color:var(--text-muted,#746c62);margin-top:0.5rem">
+          Prefer standard email? Write directly to <a href="mailto:info@sustainablemusicnw.org" style="color:var(--brand-gold,#dca842);text-decoration:none">info@sustainablemusicnw.org</a>
+        </p>
+      </form>
+    </div>
+  </section>
+
 </main>
 
 <!-- ============================================================
