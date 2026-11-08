@@ -114,15 +114,20 @@ module.exports = async function handler(req, res) {
         flyerDataUri = `data:application/pdf;base64,${fs.readFileSync(pdfFilePath).toString('base64')}`;
       }
     } catch (flyerErr) {
-      console.warn('Flyer generation warning:', flyerErr.message);
+      console.error('Flyer generation warning:', flyerErr.message);
     }
 
-    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+    // Await email dispatch directly so Vercel keeps the function running
+    const emailUser = process.env.EMAIL_USER || process.env.SMTP_USER;
+    const emailPass = process.env.EMAIL_PASS || process.env.SMTP_PASS;
+
+    if (emailUser && emailPass && championEmail) {
       try {
         const flyerAttachment = Buffer.isBuffer(pdfBuffer) 
           ? pdfBuffer 
           : (flyerDataUri ? Buffer.from(flyerDataUri.split(',')[1], 'base64') : pdfFilePath);
 
+        console.log(`Dispatching welcome email to ${championEmail}...`);
         await sendChampionWelcomeEmail({
           champion_name: championName,
           champion_email: championEmail,
@@ -130,10 +135,12 @@ module.exports = async function handler(req, res) {
           target_event_date: targetDate,
           givebutter_url: givebutterUrl
         }, flyerAttachment);
-        console.log(`Welcome email successfully dispatched to ${championEmail}`);
+        console.log(`Email successfully delivered to ${championEmail}`);
       } catch (emailErr) {
-        console.error('SMTP Email Error:', emailErr.message);
+        console.error('SMTP Email Error in Serverless:', emailErr.message);
       }
+    } else {
+      console.warn('EMAIL_USER or EMAIL_PASS not found. Email skipped.');
     }
 
     return res.status(200).json({

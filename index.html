@@ -1113,7 +1113,609 @@ body.editing .evcard:hover .ev-adm{opacity:1}
 </div>
 
 <!-- ================= FOOTER ================= -->
-<footer class="foot band band--tight">
+<main class="view" id="v-blockstage">
+  <style>
+    #v-blockstage {
+      display: none;
+    }
+    #v-blockstage.active {
+      background-color: #0b0e14;
+      color: #f1f5f9;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding-bottom: 5rem;
+    }
+    #v-blockstage .bs-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    #v-blockstage .bs-hero {
+      text-align: center;
+      padding: 4.5rem 1rem 3.5rem;
+    }
+    #v-blockstage .bs-badge {
+      display: inline-block;
+      background: rgba(220, 168, 66, 0.12);
+      color: #dca842;
+      border: 1px solid rgba(220, 168, 66, 0.3);
+      padding: 0.4rem 1.1rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1.8rem;
+    }
+    #v-blockstage .bs-title {
+      font-family: "Newsreader", Georgia, serif;
+      font-size: clamp(2.5rem, 6vw, 4.2rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin: 0 auto 1.4rem;
+      color: #ffffff;
+      max-width: 16ch;
+    }
+    #v-blockstage .bs-title em {
+      font-style: italic;
+      color: #dca842;
+    }
+    #v-blockstage .bs-sub {
+      font-size: clamp(1.05rem, 2vw, 1.25rem);
+      color: #94a3b8;
+      max-width: 44ch;
+      margin: 0 auto 2.2rem;
+      line-height: 1.6;
+    }
+    #v-blockstage .bs-cta-row {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 3.5rem;
+    }
+    .bs-btn-gold {
+      background: #dca842;
+      color: #1e1b18;
+      border: none;
+      padding: 0.85rem 1.8rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .bs-btn-gold:hover { opacity: 0.9; }
+    .bs-btn-ghost {
+      background: transparent;
+      color: #f1f5f9;
+      border: 1px solid #334155;
+      padding: 0.85rem 1.8rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .bs-btn-ghost:hover { background: #1e293b; }
+
+    /* 3 Steps */
+    #v-blockstage .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 4rem;
+    }
+    #v-blockstage .step-card {
+      background: #111620;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      padding: 2rem 1.8rem;
+    }
+    #v-blockstage .step-card .num {
+      color: #dca842;
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+    #v-blockstage .step-card h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 0 0 0.8rem;
+      color: #ffffff;
+    }
+    #v-blockstage .step-card p {
+      color: #94a3b8;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* Active Neighborhood Drives Section */
+    #v-blockstage .section-card {
+      background: #111620;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      padding: 2.2rem;
+      margin-bottom: 3.5rem;
+    }
+    #v-blockstage .section-card h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin: 0 0 0.4rem;
+      color: #ffffff;
+    }
+    #v-blockstage .section-card .subtext {
+      color: #94a3b8;
+      font-size: 0.95rem;
+      margin: 0 0 1.8rem;
+    }
+
+    /* 7 Tiers */
+    #v-blockstage .tiers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    #v-blockstage .tier-box {
+      background: #151c28;
+      border: 1px solid #233044;
+      border-radius: 8px;
+      padding: 1.2rem;
+      position: relative;
+    }
+    #v-blockstage .tier-box.unlocked {
+      border-color: #10b981;
+    }
+    #v-blockstage .tier-box.confirmed {
+      border-color: #10b981;
+      background: rgba(16, 185, 129, 0.05);
+    }
+    #v-blockstage .tier-box.active-target {
+      border-color: #dca842;
+    }
+    #v-blockstage .tier-pill {
+      position: absolute;
+      top: -10px;
+      right: 12px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    #v-blockstage .tier-pill.unlocked { background: #10b981; color: #064e3b; }
+    #v-blockstage .tier-pill.confirmed { background: #10b981; color: #064e3b; }
+    #v-blockstage .tier-pill.split { background: #dca842; color: #1e1b18; }
+    #v-blockstage .tier-pill.locked { background: #334155; color: #cbd5e1; }
+    #v-blockstage .tier-name { font-size: 1rem; font-weight: 700; color: #ffffff; margin-bottom: 0.3rem; }
+    #v-blockstage .tier-cost { color: #dca842; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.5rem; }
+    #v-blockstage .tier-box.unlocked .tier-cost { color: #34d399; }
+    #v-blockstage .tier-desc { color: #94a3b8; font-size: 0.85rem; line-height: 1.4; margin: 0; }
+
+    /* Splitting Menu & Pledge Box Row */
+    #v-blockstage .hub-split-row {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 1.8rem;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 900px) { #v-blockstage .hub-split-row { grid-template-columns: 1fr; } }
+    #v-blockstage .menu-box {
+      background: #111620;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      padding: 2rem;
+    }
+    #v-blockstage .table-wrap { width: 100%; overflow-x: auto; margin-top: 1rem; }
+    #v-blockstage .math-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+    #v-blockstage .math-table th {
+      text-align: left;
+      padding: 0.75rem 0.5rem;
+      color: #dca842;
+      border-bottom: 1px solid #233044;
+      font-weight: 600;
+    }
+    #v-blockstage .math-table td {
+      padding: 0.75rem 0.5rem;
+      border-bottom: 1px solid #17202f;
+      color: #cbd5e1;
+    }
+
+    /* Risk-Free Box */
+    #v-blockstage .risk-free-box {
+      border-left: 4px solid #dca842;
+      background: rgba(220, 168, 66, 0.05);
+      border-radius: 0 8px 8px 0;
+      padding: 1.2rem 1.4rem;
+      margin-top: 1.5rem;
+      font-size: 0.92rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+    #v-blockstage .risk-free-box h4 {
+      margin: 0 0 0.4rem;
+      color: #ffffff;
+      font-size: 1rem;
+    }
+
+    /* Trust Section */
+    #v-blockstage .trust-section {
+      background: #111620;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      padding: 2.8rem 1.5rem;
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    #v-blockstage .trust-eyebrow {
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #94a3b8;
+      letter-spacing: 0.12em;
+      margin-bottom: 2rem;
+    }
+    #v-blockstage .trust-logos {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem 2.8rem;
+      margin-bottom: 2rem;
+    }
+    #v-blockstage .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.92rem;
+      color: #cbd5e1;
+      font-weight: 600;
+    }
+    #v-blockstage .trust-item img {
+      height: 24px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    /* Bottom Big CTA */
+    #v-blockstage .bottom-cta {
+      background: #111620;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      padding: 3.5rem 1.5rem;
+      text-align: center;
+    }
+    #v-blockstage .bottom-cta h2 {
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      margin: 0 0 1rem;
+      color: #ffffff;
+    }
+    #v-blockstage .bottom-cta p {
+      color: #94a3b8;
+      font-size: 1.1rem;
+      margin: 0 auto 2rem;
+      max-width: 48ch;
+      line-height: 1.6;
+    }
+
+    /* Modal Popups */
+    .bs-modal-wrap {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+    .bs-modal-wrap.open { display: flex; }
+    .bs-modal-card {
+      background: #111620;
+      border: 1px solid #233044;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 580px;
+      padding: 2.2rem;
+      position: relative;
+      color: #f1f5f9;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .bs-modal-close {
+      position: absolute;
+      top: 1.2rem;
+      right: 1.2rem;
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .bs-modal-card h3 { font-size: 1.4rem; font-weight: 700; margin: 0 0 0.5rem; color: #ffffff; }
+    .bs-modal-card .m-lead { font-size: 0.88rem; color: #94a3b8; margin: 0 0 1.6rem; line-height: 1.5; }
+    .bs-modal-card .form-group { margin-bottom: 1.2rem; }
+    .bs-modal-card label { display: block; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 0.4rem; }
+    .bs-modal-card input, .bs-modal-card select, .bs-modal-card textarea {
+      width: 100%;
+      background: #18202d;
+      border: 1px solid #28374d;
+      border-radius: 6px;
+      padding: 0.75rem 0.9rem;
+      color: #f1f5f9;
+      font-size: 0.92rem;
+      box-sizing: border-box;
+    }
+  </style>
+
+  <div class="bs-wrap">
+    <!-- Hero (Screenshot 15) -->
+    <section class="bs-hero">
+      <div class="bs-badge">Turnkey Live Music for Neighborhoods</div>
+      <h1 class="bs-title">Live music, back on <em>your block.</em></h1>
+      <p class="bs-sub">We bring professional live music directly to Seattle neighborhoods: vetted live bands and dedicated sound systems—all bundled together.</p>
+      <div class="bs-cta-row">
+        <button class="bs-btn-gold" id="btnHeroBookConcert">Book Your Block Concert</button>
+        <button class="bs-btn-ghost" id="btnOpenExplainerModal">How the Service Works</button>
+      </div>
+    </section>
+
+    <!-- 3 Steps (Screenshot 15) -->
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="num">01</div>
+        <h3>Choose Your Location & Vibe</h3>
+        <p>Pick your street, cul-de-sac, or park picnic and musical style—from solo acoustic sets to full 7-piece headliners.</p>
+      </div>
+      <div class="step-card">
+        <div class="num">02</div>
+        <h3>Split the Band & Sound Bill</h3>
+        <p>Share your neighborhood's private booking page. Just 9 households chipping in $100 fully confirms your concert.</p>
+      </div>
+      <div class="step-card">
+        <div class="num">03</div>
+        <h3>We Deliver the Whole Show</h3>
+        <p>Our vetted artists arrive with complete sound equipment and deliver an unforgettable live show right outside your front door.</p>
+      </div>
+    </div>
+
+    <!-- Active Neighborhood Bookings (Screenshot 18) -->
+    <section class="section-card">
+      <h2>Active Neighborhood Bookings</h2>
+      <p class="subtext">Select an upcoming neighborhood drive to view progress or chip in</p>
+      <div id="bsActiveDrivesList">
+        <p style="color:#94a3b8;font-size:0.95rem;margin:0;">No active drives currently running. Be the first to start a concert on your block!</p>
+      </div>
+    </section>
+
+    <!-- Live Neighborhood Block Concert Tracker (Screenshot 18) -->
+    <section class="section-card">
+      <h2 id="bsActiveTitle">Live Neighborhood Block Concert</h2>
+      <p class="subtext">Primary 4-Piece Target: $1,640 | Max 7-Piece Headliner: $2,850</p>
+
+      <div style="height:10px;background:#1e293b;border-radius:9999px;margin-bottom:2rem;overflow:hidden;">
+        <div id="bsProgressBar" style="height:100%;width:30%;background:linear-gradient(90deg, #10b981 0%, #dca842 100%);border-radius:9999px;"></div>
+      </div>
+
+      <div class="tiers-grid">
+        <div class="tier-box confirmed">
+          <span class="tier-pill confirmed">Event Confirmed!</span>
+          <div class="tier-name">Duo (2-Person)</div>
+          <div class="tier-cost">$850 (Base Goal)</div>
+          <p class="tier-desc">Base goal confirms event! 2 vetted artists and full sound gear.</p>
+        </div>
+        <div class="tier-box unlocked">
+          <span class="tier-pill unlocked">Unlocked!</span>
+          <div class="tier-name">Solo Acoustic</div>
+          <div class="tier-cost">$500 Target</div>
+          <p class="tier-desc">Acoustic soloist set with sound equipment.</p>
+        </div>
+        <div class="tier-box active-target">
+          <span class="tier-pill split">$850 / $1250</span>
+          <div class="tier-name">Trio (3-Person)</div>
+          <div class="tier-cost">$1,250 Target</div>
+          <p class="tier-desc">Expanded 3-piece combo with full dynamic sound.</p>
+        </div>
+        <div class="tier-box">
+          <span class="tier-pill locked">Locked</span>
+          <div class="tier-name">Quartet (4-Piece)</div>
+          <div class="tier-cost">$1,640 Target</div>
+          <p class="tier-desc">Full 4-piece rhythm section (jazz, soul, or funk outfit).</p>
+        </div>
+        <div class="tier-box">
+          <span class="tier-pill locked">Locked</span>
+          <div class="tier-name">Quintet (5-Piece)</div>
+          <div class="tier-cost">$2,050 Target</div>
+          <p class="tier-desc">High-energy 5-piece band with horns or percussion for neighborhood street dancing.</p>
+        </div>
+        <div class="tier-box">
+          <span class="tier-pill locked">Locked</span>
+          <div class="tier-name">Sextet (6-Piece)</div>
+          <div class="tier-cost">$2,450 Target</div>
+          <p class="tier-desc">Expanded 6-piece collective featuring multi-piece horn section.</p>
+        </div>
+        <div class="tier-box">
+          <span class="tier-pill locked">Locked</span>
+          <div class="tier-name">7-Piece Big Band</div>
+          <div class="tier-cost">$2,850 Target</div>
+          <p class="tier-desc">Ultimate headliner ensemble with full horn section and extended rhythm.</p>
+        </div>
+      </div>
+
+      <!-- About This Event & Splitting Menu (Screenshot 18 & 19) -->
+      <h3 style="font-size:1.3rem;margin:2rem 0 0.4rem;color:#ffffff;">About This Event</h3>
+      <p style="color:#94a3b8;font-size:0.95rem;margin:0 0 1.8rem;">Neighbors are pooling funds together to bring live music to the block!</p>
+
+      <div class="hub-split-row">
+        <div class="menu-box">
+          <h4 style="margin:0 0 0.4rem;font-size:1.05rem;color:#ffffff;">The Complete Instrumentation & Household Splitting Menu</h4>
+          <p style="margin:0 0 1rem;font-size:0.88rem;color:#94a3b8;">Every level includes vetted artists and complete PA sound equipment. Here is how easily a block unlocks each ensemble at $100 per household:</p>
+
+          <div class="table-wrap">
+            <table class="math-table">
+              <thead>
+                <tr>
+                  <th>Ensemble Size</th>
+                  <th>Package Total</th>
+                  <th>Households at $100</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Solo Acoustic</td><td>$500</td><td>5 Households</td></tr>
+                <tr><td>Duo (2-Person) <em>(Base Goal)</em></td><td>$850</td><td>9 Households</td></tr>
+                <tr><td>Trio (3-Person)</td><td>$1,250</td><td>13 Households</td></tr>
+                <tr><td>Quartet (4-Piece Band)</td><td>$1,640</td><td>17 Households</td></tr>
+                <tr><td>Quintet (5-Piece Band)</td><td>$2,050</td><td>21 Households</td></tr>
+                <tr><td>Sextet (6-Piece Band)</td><td>$2,450</td><td>25 Households</td></tr>
+                <tr><td>7-Piece Big Band / Headliner</td><td>$2,850</td><td>29 Households</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Pledge Card (Screenshot 18 & 19) -->
+        <div style="background:#151c28;border:1px solid #233044;border-radius:12px;padding:2rem;text-align:center;display:flex;flex-direction:column;justify-content:center;">
+          <h4 style="margin:0 0 0.8rem;font-size:1.25rem;color:#ffffff;">Chip In to This Concert</h4>
+          <p style="color:#94a3b8;font-size:0.9rem;margin:0 0 1.6rem;line-height:1.5;">Help this block unlock the next ensemble level for their gathering.</p>
+          <a id="btnChipInDirect" href="https://givebutter.com" target="_blank" class="bs-btn-gold" style="width:100%;box-sizing:border-box;">Chip In to This Event</a>
+          <p style="font-size:0.75rem;color:#64748b;margin:1.2rem 0 0;line-height:1.4;">Powered by <strong>Givebutter Escrow</strong> for instant, secure payments and automated refunds.</p>
+        </div>
+      </div>
+
+      <!-- 100% Risk Free Box (Screenshot 19) -->
+      <div class="risk-free-box">
+        <h4>100% Risk-Free Guarantee</h4>
+        Every concert requires an <strong>$850 duo baseline</strong> to confirm talent and sound. If your block does not reach $850 by your cutoff date, the event is called off and <strong>100% of pledges are automatically refunded back to cards</strong> via Givebutter. Zero financial liability for the host or neighbors.
+      </div>
+    </section>
+
+    <!-- Trust & Vetted Badges (Screenshot 20) -->
+    <section class="trust-section">
+      <div class="trust-eyebrow">Vetted & Supported for Dependability By</div>
+      <div class="trust-logos">
+        <div class="trust-item"><img src="afm-logo.png" alt="AFM"> American Federation of Musicians (AFM)</div>
+        <div class="trust-item"><img src="union-logo.png" alt="Local 76-493"> Musicians' Assoc. Local 76–493</div>
+        <div class="trust-item"><img src="mptf-logo.jpg" alt="MPTF"> Music Performance Trust Fund (MPTF)</div>
+      </div>
+      <div class="trust-logos" style="margin-bottom:1.5rem;">
+        <div class="trust-item"><span style="color:#dca842;">⬡</span> City of Seattle</div>
+        <div class="trust-item"><span style="color:#10b981;">✔</span> Candid / GuideStar</div>
+        <div class="trust-item"><span style="color:#e11d48;">♥</span> Benevity Certified</div>
+        <div class="trust-item"><img src="givebutter-logo.png" alt="Givebutter"> Givebutter Verified</div>
+      </div>
+      <p style="color:#64748b;font-size:0.8rem;max-width:700px;margin:0 auto;line-height:1.6;">Sustainable Music Northwest is a registered 501(c)(3) nonprofit cultural organization. All musicians are booked and compensated in coordination with AFM Local 76–493 and MPTF standards. All pooled pledges are held in secure escrow and qualify as tax-deductible to the full extent of the law.</p>
+    </section>
+
+    <!-- Bottom CTA (Screenshot 20) -->
+    <section class="bottom-cta">
+      <h2>Ready to Host a Concert on Your Block?</h2>
+      <p>Skip the sound gear rentals and musician contracting. We deliver everything you need for an unforgettable neighborhood party.</p>
+      <button class="bs-btn-gold" id="btnBottomBookParty">Book Your Block Party</button>
+    </section>
+  </div>
+
+  <!-- Modal 1: How the Service Works (Screenshot 16) -->
+  <div class="bs-modal-wrap" id="modalExplainer">
+    <div class="bs-modal-card">
+      <button class="bs-modal-close" id="btnCloseExplainer">&times;</button>
+      <h3>The Turnkey Block Party Service</h3>
+      <p class="m-lead">Hiring live bands usually requires sourcing sound systems, negotiating rates, and paying large upfront deposits. <strong>Block Stage solves all of it as a single turnkey service.</strong></p>
+
+      <div style="background:#151c28;border:1px solid #233044;border-radius:8px;padding:1.4rem;margin-bottom:1.8rem;">
+        <h4 style="margin:0 0 0.8rem;color:#dca842;font-size:0.95rem;">What We Handle For You:</h4>
+        <ul style="margin:0;padding-left:1.2rem;color:#cbd5e1;font-size:0.88rem;line-height:1.7;">
+          <li>Vetted, high-energy, crowd-pleasing professional bands (AFM Local 76–493 backed)</li>
+          <li>Full PA sound equipment & instruments tailored to your space</li>
+          <li>All artist contracting, fair-wage compensation, and insurance</li>
+          <li>Custom campaign flyer & QR code so neighbors can chip in</li>
+        </ul>
+      </div>
+
+      <button class="bs-btn-gold" id="btnExplainerToBook" style="width:100%;">Book Your Block Concert</button>
+    </div>
+  </div>
+
+  <!-- Modal 2: Intake & Booking Form (Screenshot 17) -->
+  <div class="bs-modal-wrap" id="modalIntake">
+    <div class="bs-modal-card">
+      <button class="bs-modal-close" id="btnCloseIntake">&times;</button>
+      <h3>Book a Block Stage Concert</h3>
+      <p class="m-lead">Submit your party location and preferred date. We will set up your block's booking page and generate a print-ready promotional flyer with a custom QR code.</p>
+
+      <form id="bsIntakeForm">
+        <div class="form-group">
+          <label>Host / Coordinator Full Name</label>
+          <input type="text" name="champion_name" required placeholder="e.g., Sarah Miller">
+        </div>
+        <div class="form-group">
+          <label>Contact Email Address</label>
+          <input type="email" name="champion_email" required placeholder="sarah@example.com">
+        </div>
+        <div class="form-group">
+          <label>Neighborhood & Location</label>
+          <input type="text" name="neighborhood_title" required placeholder="e.g., Wedgwood (35th Ave NE & 75th St)">
+        </div>
+        <div class="form-group">
+          <label>Event Venue Type</label>
+          <select name="venue_type">
+            <option value="Residential Street Gathering">Residential Street Gathering</option>
+            <option value="Cul-de-sac Party">Cul-de-sac Party</option>
+            <option value="Driveway / Front Lawn Gathering">Driveway / Front Lawn Gathering</option>
+            <option value="Community Garden / Courtyard">Community Garden / Courtyard</option>
+            <option value="Park Picnic / Public Space">Park Picnic / Public Space</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Target Date (Minimum 60 days out for band scheduling)</label>
+          <input type="date" name="target_event_date" required>
+        </div>
+        <div class="form-group">
+          <label>Music Preference</label>
+          <select name="music_preference">
+            <option value="All-Ages Community Mix">All-Ages Community Mix</option>
+            <option value="High-Energy Funk / Soul / Dance">High-Energy Funk / Soul / Dance</option>
+            <option value="Jazz / Swing / Bossa Nova">Jazz / Swing / Bossa Nova</option>
+            <option value="Acoustic Folk / Americana / Bluegrass">Acoustic Folk / Americana / Bluegrass</option>
+            <option value="Indie Rock / Pop Grooves">Indie Rock / Pop Grooves</option>
+            <option value="Classical / Chamber Strings">Classical / Chamber Strings</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Target Anchor Sponsor / Micro-Pledge Option</label>
+          <select name="anchor_pledge">
+            <option value="$100 — Community Catalyst (Recommended)">$100 — Community Catalyst (Recommended)</option>
+            <option value="$50 — Neighborhood Neighbor">$50 — Neighborhood Neighbor</option>
+            <option value="$250 — Block Anchor Sponsor">$250 — Block Anchor Sponsor</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Tell Us About Your Gathering</label>
+          <textarea name="description" rows="3" placeholder="e.g., Annual summer barbecue. We want an energetic band to play while neighbors hang out."></textarea>
+        </div>
+
+        <div style="margin-bottom:1.4rem;font-size:0.82rem;color:#cbd5e1;line-height:1.5;">
+          <label style="display:flex;align-items:flex-start;gap:0.5rem;cursor:pointer;">
+            <input type="checkbox" required style="width:auto;margin-top:0.25rem;">
+            <span>I understand that an <strong>$850 baseline</strong> confirms the musicians and equipment. If unreached by the deadline, no event takes place and 100% of pledges are automatically refunded via Givebutter escrow.</span>
+          </label>
+        </div>
+
+        <button type="submit" id="btnSubmitCampaign" class="bs-btn-gold" style="width:100%;padding:1rem;">Create Our Block Campaign & Flyer</button>
+      </form>
+    </div>
+  </div>
+</main>
+  <footer class="foot band band--tight">
   <div class="wrap">
     <div class="foot__top">
       <button class="foot__brand" data-go="home" style="background:none;border:0;text-align:left">
@@ -1931,610 +2533,25 @@ var IMAGES={"kevin": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QEKRXh
 <!-- ============================================================
      BLOCK STAGE (Exact Native View from Screenshots)
      ============================================================ -->
-<main class="view" id="v-blockstage">
-  <style>
-    #v-blockstage {
-      background-color: #0b0e14;
-      color: #f1f5f9;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      padding-bottom: 5rem;
-    }
-    #v-blockstage .bs-wrap {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-    }
-    #v-blockstage .bs-hero {
-      text-align: center;
-      padding: 4.5rem 1rem 3.5rem;
-    }
-    #v-blockstage .bs-badge {
-      display: inline-block;
-      background: rgba(220, 168, 66, 0.12);
-      color: #dca842;
-      border: 1px solid rgba(220, 168, 66, 0.3);
-      padding: 0.4rem 1.1rem;
-      border-radius: 9999px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 1.8rem;
-    }
-    #v-blockstage .bs-title {
-      font-family: "Newsreader", Georgia, serif;
-      font-size: clamp(2.5rem, 6vw, 4.2rem);
-      font-weight: 700;
-      line-height: 1.1;
-      margin: 0 auto 1.4rem;
-      color: #ffffff;
-      max-width: 16ch;
-    }
-    #v-blockstage .bs-title em {
-      font-style: italic;
-      color: #dca842;
-    }
-    #v-blockstage .bs-sub {
-      font-size: clamp(1.05rem, 2vw, 1.25rem);
-      color: #94a3b8;
-      max-width: 44ch;
-      margin: 0 auto 2.2rem;
-      line-height: 1.6;
-    }
-    #v-blockstage .bs-cta-row {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 3.5rem;
-    }
-    .bs-btn-gold {
-      background: #dca842;
-      color: #1e1b18;
-      border: none;
-      padding: 0.85rem 1.8rem;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: opacity 0.2s;
-      text-decoration: none;
-      display: inline-block;
-    }
-    .bs-btn-gold:hover { opacity: 0.9; }
-    .bs-btn-ghost {
-      background: transparent;
-      color: #f1f5f9;
-      border: 1px solid #334155;
-      padding: 0.85rem 1.8rem;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .bs-btn-ghost:hover { background: #1e293b; }
 
-    /* 3 Steps */
-    #v-blockstage .steps-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 4rem;
-    }
-    #v-blockstage .step-card {
-      background: #111620;
-      border: 1px solid #1e293b;
-      border-radius: 12px;
-      padding: 2rem 1.8rem;
-    }
-    #v-blockstage .step-card .num {
-      color: #dca842;
-      font-size: 1.8rem;
-      font-weight: 800;
-      margin-bottom: 1rem;
-    }
-    #v-blockstage .step-card h3 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin: 0 0 0.8rem;
-      color: #ffffff;
-    }
-    #v-blockstage .step-card p {
-      color: #94a3b8;
-      font-size: 0.95rem;
-      line-height: 1.6;
-      margin: 0;
-    }
-
-    /* Active Neighborhood Drives Section */
-    #v-blockstage .section-card {
-      background: #111620;
-      border: 1px solid #1e293b;
-      border-radius: 12px;
-      padding: 2.2rem;
-      margin-bottom: 3.5rem;
-    }
-    #v-blockstage .section-card h2 {
-      font-size: 1.6rem;
-      font-weight: 700;
-      margin: 0 0 0.4rem;
-      color: #ffffff;
-    }
-    #v-blockstage .section-card .subtext {
-      color: #94a3b8;
-      font-size: 0.95rem;
-      margin: 0 0 1.8rem;
-    }
-
-    /* 7 Tiers */
-    #v-blockstage .tiers-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2.5rem;
-    }
-    #v-blockstage .tier-box {
-      background: #151c28;
-      border: 1px solid #233044;
-      border-radius: 8px;
-      padding: 1.2rem;
-      position: relative;
-    }
-    #v-blockstage .tier-box.unlocked {
-      border-color: #10b981;
-    }
-    #v-blockstage .tier-box.confirmed {
-      border-color: #10b981;
-      background: rgba(16, 185, 129, 0.05);
-    }
-    #v-blockstage .tier-box.active-target {
-      border-color: #dca842;
-    }
-    #v-blockstage .tier-pill {
-      position: absolute;
-      top: -10px;
-      right: 12px;
-      font-size: 0.68rem;
-      font-weight: 800;
-      padding: 2px 8px;
-      border-radius: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    #v-blockstage .tier-pill.unlocked { background: #10b981; color: #064e3b; }
-    #v-blockstage .tier-pill.confirmed { background: #10b981; color: #064e3b; }
-    #v-blockstage .tier-pill.split { background: #dca842; color: #1e1b18; }
-    #v-blockstage .tier-pill.locked { background: #334155; color: #cbd5e1; }
-    #v-blockstage .tier-name { font-size: 1rem; font-weight: 700; color: #ffffff; margin-bottom: 0.3rem; }
-    #v-blockstage .tier-cost { color: #dca842; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.5rem; }
-    #v-blockstage .tier-box.unlocked .tier-cost { color: #34d399; }
-    #v-blockstage .tier-desc { color: #94a3b8; font-size: 0.85rem; line-height: 1.4; margin: 0; }
-
-    /* Splitting Menu & Pledge Box Row */
-    #v-blockstage .hub-split-row {
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 1.8rem;
-      margin-bottom: 2rem;
-    }
-    @media (max-width: 900px) { #v-blockstage .hub-split-row { grid-template-columns: 1fr; } }
-    #v-blockstage .menu-box {
-      background: #111620;
-      border: 1px solid #1e293b;
-      border-radius: 12px;
-      padding: 2rem;
-    }
-    #v-blockstage .table-wrap { width: 100%; overflow-x: auto; margin-top: 1rem; }
-    #v-blockstage .math-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.92rem;
-    }
-    #v-blockstage .math-table th {
-      text-align: left;
-      padding: 0.75rem 0.5rem;
-      color: #dca842;
-      border-bottom: 1px solid #233044;
-      font-weight: 600;
-    }
-    #v-blockstage .math-table td {
-      padding: 0.75rem 0.5rem;
-      border-bottom: 1px solid #17202f;
-      color: #cbd5e1;
-    }
-
-    /* Risk-Free Box */
-    #v-blockstage .risk-free-box {
-      border-left: 4px solid #dca842;
-      background: rgba(220, 168, 66, 0.05);
-      border-radius: 0 8px 8px 0;
-      padding: 1.2rem 1.4rem;
-      margin-top: 1.5rem;
-      font-size: 0.92rem;
-      color: #cbd5e1;
-      line-height: 1.6;
-    }
-    #v-blockstage .risk-free-box h4 {
-      margin: 0 0 0.4rem;
-      color: #ffffff;
-      font-size: 1rem;
-    }
-
-    /* Trust Section */
-    #v-blockstage .trust-section {
-      background: #111620;
-      border: 1px solid #1e293b;
-      border-radius: 12px;
-      padding: 2.8rem 1.5rem;
-      text-align: center;
-      margin-bottom: 4rem;
-    }
-    #v-blockstage .trust-eyebrow {
-      text-transform: uppercase;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: #94a3b8;
-      letter-spacing: 0.12em;
-      margin-bottom: 2rem;
-    }
-    #v-blockstage .trust-logos {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      gap: 2rem 2.8rem;
-      margin-bottom: 2rem;
-    }
-    #v-blockstage .trust-item {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-size: 0.92rem;
-      color: #cbd5e1;
-      font-weight: 600;
-    }
-    #v-blockstage .trust-item img {
-      height: 24px;
-      width: auto;
-      object-fit: contain;
-    }
-
-    /* Bottom Big CTA */
-    #v-blockstage .bottom-cta {
-      background: #111620;
-      border: 1px solid #1e293b;
-      border-radius: 12px;
-      padding: 3.5rem 1.5rem;
-      text-align: center;
-    }
-    #v-blockstage .bottom-cta h2 {
-      font-size: clamp(2rem, 4vw, 2.8rem);
-      margin: 0 0 1rem;
-      color: #ffffff;
-    }
-    #v-blockstage .bottom-cta p {
-      color: #94a3b8;
-      font-size: 1.1rem;
-      margin: 0 auto 2rem;
-      max-width: 48ch;
-      line-height: 1.6;
-    }
-
-    /* Modal Popups */
-    .bs-modal-wrap {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(4px);
-      z-index: 10000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-      overflow-y: auto;
-    }
-    .bs-modal-wrap.open { display: flex; }
-    .bs-modal-card {
-      background: #111620;
-      border: 1px solid #233044;
-      border-radius: 12px;
-      width: 100%;
-      max-width: 580px;
-      padding: 2.2rem;
-      position: relative;
-      color: #f1f5f9;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    .bs-modal-close {
-      position: absolute;
-      top: 1.2rem;
-      right: 1.2rem;
-      background: transparent;
-      border: none;
-      color: #94a3b8;
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-    .bs-modal-card h3 { font-size: 1.4rem; font-weight: 700; margin: 0 0 0.5rem; color: #ffffff; }
-    .bs-modal-card .m-lead { font-size: 0.88rem; color: #94a3b8; margin: 0 0 1.6rem; line-height: 1.5; }
-    .bs-modal-card .form-group { margin-bottom: 1.2rem; }
-    .bs-modal-card label { display: block; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 0.4rem; }
-    .bs-modal-card input, .bs-modal-card select, .bs-modal-card textarea {
-      width: 100%;
-      background: #18202d;
-      border: 1px solid #28374d;
-      border-radius: 6px;
-      padding: 0.75rem 0.9rem;
-      color: #f1f5f9;
-      font-size: 0.92rem;
-      box-sizing: border-box;
-    }
-  </style>
-
-  <div class="bs-wrap">
-    <!-- Hero (Screenshot 15) -->
-    <section class="bs-hero">
-      <div class="bs-badge">Turnkey Live Music for Neighborhoods</div>
-      <h1 class="bs-title">Live music, back on <em>your block.</em></h1>
-      <p class="bs-sub">We bring professional live music directly to Seattle neighborhoods: vetted live bands and dedicated sound systems—all bundled together.</p>
-      <div class="bs-cta-row">
-        <button class="bs-btn-gold" id="btnHeroBookConcert">Book Your Block Concert</button>
-        <button class="bs-btn-ghost" id="btnOpenExplainerModal">How the Service Works</button>
-      </div>
-    </section>
-
-    <!-- 3 Steps (Screenshot 15) -->
-    <div class="steps-grid">
-      <div class="step-card">
-        <div class="num">01</div>
-        <h3>Choose Your Location & Vibe</h3>
-        <p>Pick your street, cul-de-sac, or park picnic and musical style—from solo acoustic sets to full 7-piece headliners.</p>
-      </div>
-      <div class="step-card">
-        <div class="num">02</div>
-        <h3>Split the Band & Sound Bill</h3>
-        <p>Share your neighborhood's private booking page. Just 9 households chipping in $100 fully confirms your concert.</p>
-      </div>
-      <div class="step-card">
-        <div class="num">03</div>
-        <h3>We Deliver the Whole Show</h3>
-        <p>Our vetted artists arrive with complete sound equipment and deliver an unforgettable live show right outside your front door.</p>
-      </div>
-    </div>
-
-    <!-- Active Neighborhood Bookings (Screenshot 18) -->
-    <section class="section-card">
-      <h2>Active Neighborhood Bookings</h2>
-      <p class="subtext">Select an upcoming neighborhood drive to view progress or chip in</p>
-      <div id="bsActiveDrivesList">
-        <p style="color:#94a3b8;font-size:0.95rem;margin:0;">No active drives currently running. Be the first to start a concert on your block!</p>
-      </div>
-    </section>
-
-    <!-- Live Neighborhood Block Concert Tracker (Screenshot 18) -->
-    <section class="section-card">
-      <h2 id="bsActiveTitle">Live Neighborhood Block Concert</h2>
-      <p class="subtext">Primary 4-Piece Target: $1,640 | Max 7-Piece Headliner: $2,850</p>
-
-      <div style="height:10px;background:#1e293b;border-radius:9999px;margin-bottom:2rem;overflow:hidden;">
-        <div id="bsProgressBar" style="height:100%;width:30%;background:linear-gradient(90deg, #10b981 0%, #dca842 100%);border-radius:9999px;"></div>
-      </div>
-
-      <div class="tiers-grid">
-        <div class="tier-box confirmed">
-          <span class="tier-pill confirmed">Event Confirmed!</span>
-          <div class="tier-name">Duo (2-Person)</div>
-          <div class="tier-cost">$850 (Base Goal)</div>
-          <p class="tier-desc">Base goal confirms event! 2 vetted artists and full sound gear.</p>
-        </div>
-        <div class="tier-box unlocked">
-          <span class="tier-pill unlocked">Unlocked!</span>
-          <div class="tier-name">Solo Acoustic</div>
-          <div class="tier-cost">$500 Target</div>
-          <p class="tier-desc">Acoustic soloist set with sound equipment.</p>
-        </div>
-        <div class="tier-box active-target">
-          <span class="tier-pill split">$850 / $1250</span>
-          <div class="tier-name">Trio (3-Person)</div>
-          <div class="tier-cost">$1,250 Target</div>
-          <p class="tier-desc">Expanded 3-piece combo with full dynamic sound.</p>
-        </div>
-        <div class="tier-box">
-          <span class="tier-pill locked">Locked</span>
-          <div class="tier-name">Quartet (4-Piece)</div>
-          <div class="tier-cost">$1,640 Target</div>
-          <p class="tier-desc">Full 4-piece rhythm section (jazz, soul, or funk outfit).</p>
-        </div>
-        <div class="tier-box">
-          <span class="tier-pill locked">Locked</span>
-          <div class="tier-name">Quintet (5-Piece)</div>
-          <div class="tier-cost">$2,050 Target</div>
-          <p class="tier-desc">High-energy 5-piece band with horns or percussion for neighborhood street dancing.</p>
-        </div>
-        <div class="tier-box">
-          <span class="tier-pill locked">Locked</span>
-          <div class="tier-name">Sextet (6-Piece)</div>
-          <div class="tier-cost">$2,450 Target</div>
-          <p class="tier-desc">Expanded 6-piece collective featuring multi-piece horn section.</p>
-        </div>
-        <div class="tier-box">
-          <span class="tier-pill locked">Locked</span>
-          <div class="tier-name">7-Piece Big Band</div>
-          <div class="tier-cost">$2,850 Target</div>
-          <p class="tier-desc">Ultimate headliner ensemble with full horn section and extended rhythm.</p>
-        </div>
-      </div>
-
-      <!-- About This Event & Splitting Menu (Screenshot 18 & 19) -->
-      <h3 style="font-size:1.3rem;margin:2rem 0 0.4rem;color:#ffffff;">About This Event</h3>
-      <p style="color:#94a3b8;font-size:0.95rem;margin:0 0 1.8rem;">Neighbors are pooling funds together to bring live music to the block!</p>
-
-      <div class="hub-split-row">
-        <div class="menu-box">
-          <h4 style="margin:0 0 0.4rem;font-size:1.05rem;color:#ffffff;">The Complete Instrumentation & Household Splitting Menu</h4>
-          <p style="margin:0 0 1rem;font-size:0.88rem;color:#94a3b8;">Every level includes vetted artists and complete PA sound equipment. Here is how easily a block unlocks each ensemble at $100 per household:</p>
-
-          <div class="table-wrap">
-            <table class="math-table">
-              <thead>
-                <tr>
-                  <th>Ensemble Size</th>
-                  <th>Package Total</th>
-                  <th>Households at $100</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td>Solo Acoustic</td><td>$500</td><td>5 Households</td></tr>
-                <tr><td>Duo (2-Person) <em>(Base Goal)</em></td><td>$850</td><td>9 Households</td></tr>
-                <tr><td>Trio (3-Person)</td><td>$1,250</td><td>13 Households</td></tr>
-                <tr><td>Quartet (4-Piece Band)</td><td>$1,640</td><td>17 Households</td></tr>
-                <tr><td>Quintet (5-Piece Band)</td><td>$2,050</td><td>21 Households</td></tr>
-                <tr><td>Sextet (6-Piece Band)</td><td>$2,450</td><td>25 Households</td></tr>
-                <tr><td>7-Piece Big Band / Headliner</td><td>$2,850</td><td>29 Households</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Pledge Card (Screenshot 18 & 19) -->
-        <div style="background:#151c28;border:1px solid #233044;border-radius:12px;padding:2rem;text-align:center;display:flex;flex-direction:column;justify-content:center;">
-          <h4 style="margin:0 0 0.8rem;font-size:1.25rem;color:#ffffff;">Chip In to This Concert</h4>
-          <p style="color:#94a3b8;font-size:0.9rem;margin:0 0 1.6rem;line-height:1.5;">Help this block unlock the next ensemble level for their gathering.</p>
-          <a id="btnChipInDirect" href="https://givebutter.com" target="_blank" class="bs-btn-gold" style="width:100%;box-sizing:border-box;">Chip In to This Event</a>
-          <p style="font-size:0.75rem;color:#64748b;margin:1.2rem 0 0;line-height:1.4;">Powered by <strong>Givebutter Escrow</strong> for instant, secure payments and automated refunds.</p>
-        </div>
-      </div>
-
-      <!-- 100% Risk Free Box (Screenshot 19) -->
-      <div class="risk-free-box">
-        <h4>100% Risk-Free Guarantee</h4>
-        Every concert requires an <strong>$850 duo baseline</strong> to confirm talent and sound. If your block does not reach $850 by your cutoff date, the event is called off and <strong>100% of pledges are automatically refunded back to cards</strong> via Givebutter. Zero financial liability for the host or neighbors.
-      </div>
-    </section>
-
-    <!-- Trust & Vetted Badges (Screenshot 20) -->
-    <section class="trust-section">
-      <div class="trust-eyebrow">Vetted & Supported for Dependability By</div>
-      <div class="trust-logos">
-        <div class="trust-item"><img src="afm-logo.png" alt="AFM"> American Federation of Musicians (AFM)</div>
-        <div class="trust-item"><img src="union-logo.png" alt="Local 76-493"> Musicians' Assoc. Local 76–493</div>
-        <div class="trust-item"><img src="mptf-logo.jpg" alt="MPTF"> Music Performance Trust Fund (MPTF)</div>
-      </div>
-      <div class="trust-logos" style="margin-bottom:1.5rem;">
-        <div class="trust-item"><span style="color:#dca842;">⬡</span> City of Seattle</div>
-        <div class="trust-item"><span style="color:#10b981;">✔</span> Candid / GuideStar</div>
-        <div class="trust-item"><span style="color:#e11d48;">♥</span> Benevity Certified</div>
-        <div class="trust-item"><img src="givebutter-logo.png" alt="Givebutter"> Givebutter Verified</div>
-      </div>
-      <p style="color:#64748b;font-size:0.8rem;max-width:700px;margin:0 auto;line-height:1.6;">Sustainable Music Northwest is a registered 501(c)(3) nonprofit cultural organization. All musicians are booked and compensated in coordination with AFM Local 76–493 and MPTF standards. All pooled pledges are held in secure escrow and qualify as tax-deductible to the full extent of the law.</p>
-    </section>
-
-    <!-- Bottom CTA (Screenshot 20) -->
-    <section class="bottom-cta">
-      <h2>Ready to Host a Concert on Your Block?</h2>
-      <p>Skip the sound gear rentals and musician contracting. We deliver everything you need for an unforgettable neighborhood party.</p>
-      <button class="bs-btn-gold" id="btnBottomBookParty">Book Your Block Party</button>
-    </section>
-  </div>
-
-  <!-- Modal 1: How the Service Works (Screenshot 16) -->
-  <div class="bs-modal-wrap" id="modalExplainer">
-    <div class="bs-modal-card">
-      <button class="bs-modal-close" id="btnCloseExplainer">&times;</button>
-      <h3>The Turnkey Block Party Service</h3>
-      <p class="m-lead">Hiring live bands usually requires sourcing sound systems, negotiating rates, and paying large upfront deposits. <strong>Block Stage solves all of it as a single turnkey service.</strong></p>
-
-      <div style="background:#151c28;border:1px solid #233044;border-radius:8px;padding:1.4rem;margin-bottom:1.8rem;">
-        <h4 style="margin:0 0 0.8rem;color:#dca842;font-size:0.95rem;">What We Handle For You:</h4>
-        <ul style="margin:0;padding-left:1.2rem;color:#cbd5e1;font-size:0.88rem;line-height:1.7;">
-          <li>Vetted, high-energy, crowd-pleasing professional bands (AFM Local 76–493 backed)</li>
-          <li>Full PA sound equipment & instruments tailored to your space</li>
-          <li>All artist contracting, fair-wage compensation, and insurance</li>
-          <li>Custom campaign flyer & QR code so neighbors can chip in</li>
-        </ul>
-      </div>
-
-      <button class="bs-btn-gold" id="btnExplainerToBook" style="width:100%;">Book Your Block Concert</button>
-    </div>
-  </div>
-
-  <!-- Modal 2: Intake & Booking Form (Screenshot 17) -->
-  <div class="bs-modal-wrap" id="modalIntake">
-    <div class="bs-modal-card">
-      <button class="bs-modal-close" id="btnCloseIntake">&times;</button>
-      <h3>Book a Block Stage Concert</h3>
-      <p class="m-lead">Submit your party location and preferred date. We will set up your block's booking page and generate a print-ready promotional flyer with a custom QR code.</p>
-
-      <form id="bsIntakeForm">
-        <div class="form-group">
-          <label>Host / Coordinator Full Name</label>
-          <input type="text" name="champion_name" required placeholder="e.g., Sarah Miller">
-        </div>
-        <div class="form-group">
-          <label>Contact Email Address</label>
-          <input type="email" name="champion_email" required placeholder="sarah@example.com">
-        </div>
-        <div class="form-group">
-          <label>Neighborhood & Location</label>
-          <input type="text" name="neighborhood_title" required placeholder="e.g., Wedgwood (35th Ave NE & 75th St)">
-        </div>
-        <div class="form-group">
-          <label>Event Venue Type</label>
-          <select name="venue_type">
-            <option value="Residential Street Gathering">Residential Street Gathering</option>
-            <option value="Cul-de-sac Party">Cul-de-sac Party</option>
-            <option value="Driveway / Front Lawn Gathering">Driveway / Front Lawn Gathering</option>
-            <option value="Community Garden / Courtyard">Community Garden / Courtyard</option>
-            <option value="Park Picnic / Public Space">Park Picnic / Public Space</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Target Date (Minimum 60 days out for band scheduling)</label>
-          <input type="date" name="target_event_date" required>
-        </div>
-        <div class="form-group">
-          <label>Music Preference</label>
-          <select name="music_preference">
-            <option value="All-Ages Community Mix">All-Ages Community Mix</option>
-            <option value="High-Energy Funk / Soul / Dance">High-Energy Funk / Soul / Dance</option>
-            <option value="Jazz / Swing / Bossa Nova">Jazz / Swing / Bossa Nova</option>
-            <option value="Acoustic Folk / Americana / Bluegrass">Acoustic Folk / Americana / Bluegrass</option>
-            <option value="Indie Rock / Pop Grooves">Indie Rock / Pop Grooves</option>
-            <option value="Classical / Chamber Strings">Classical / Chamber Strings</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Target Anchor Sponsor / Micro-Pledge Option</label>
-          <select name="anchor_pledge">
-            <option value="$100 — Community Catalyst (Recommended)">$100 — Community Catalyst (Recommended)</option>
-            <option value="$50 — Neighborhood Neighbor">$50 — Neighborhood Neighbor</option>
-            <option value="$250 — Block Anchor Sponsor">$250 — Block Anchor Sponsor</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Tell Us About Your Gathering</label>
-          <textarea name="description" rows="3" placeholder="e.g., Annual summer barbecue. We want an energetic band to play while neighbors hang out."></textarea>
-        </div>
-
-        <div style="margin-bottom:1.4rem;font-size:0.82rem;color:#cbd5e1;line-height:1.5;">
-          <label style="display:flex;align-items:flex-start;gap:0.5rem;cursor:pointer;">
-            <input type="checkbox" required style="width:auto;margin-top:0.25rem;">
-            <span>I understand that an <strong>$850 baseline</strong> confirms the musicians and equipment. If unreached by the deadline, no event takes place and 100% of pledges are automatically refunded via Givebutter escrow.</span>
-          </label>
-        </div>
-
-        <button type="submit" id="btnSubmitCampaign" class="bs-btn-gold" style="width:100%;padding:1rem;">Create Our Block Campaign & Flyer</button>
-      </form>
-    </div>
-  </div>
-</main>
 <!-- ============================================================
      END BLOCK STAGE
      ============================================================ -->
 <script id="bs-native-logic">
 (function() {
+  const TIERS = [
+    { name: 'Solo Acoustic', cost: 500, desc: 'Acoustic soloist set with sound equipment.' },
+    { name: 'Duo (2-Person)', cost: 850, base: true, desc: 'Base goal confirms event! 2 vetted artists and full sound gear.' },
+    { name: 'Trio (3-Person)', cost: 1250, desc: 'Expanded 3-piece combo with full dynamic sound.' },
+    { name: 'Quartet (4-Piece)', cost: 1640, desc: 'Full 4-piece rhythm section (jazz, soul, or funk outfit).' },
+    { name: 'Quintet (5-Piece)', cost: 2050, desc: 'High-energy 5-piece band with horns or percussion for neighborhood street dancing.' },
+    { name: 'Sextet (6-Piece)', cost: 2450, desc: 'Expanded 6-piece collective featuring multi-piece horn section.' },
+    { name: '7-Piece Big Band', cost: 2850, desc: 'Ultimate headliner ensemble with full horn section and extended rhythm.' }
+  ];
+
+  let liveCampaigns = [];
+  let selectedIdx = 0;
+
   const modalExplainer = document.getElementById('modalExplainer');
   const modalIntake = document.getElementById('modalIntake');
   const formIntake = document.getElementById('bsIntakeForm');
@@ -2553,28 +2570,92 @@ var IMAGES={"kevin": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QEKRXh
     openModal(modalIntake);
   });
 
-  // Fetch campaigns from backend
   async function loadCampaigns() {
     try {
       const res = await fetch('/api/campaigns/active');
       const list = await res.json();
       if (Array.isArray(list) && list.length > 0) {
-        const c = list[0];
-        document.getElementById('bsActiveTitle').textContent = c.title;
-        document.getElementById('btnChipInDirect').href = c.url || 'https://givebutter.com';
-        const listContainer = document.getElementById('bsActiveDrivesList');
-        if (listContainer) {
-          listContainer.innerHTML = list.map(item => `
-            <div style="padding:1rem;background:#151c28;border:1px solid #233044;border-radius:8px;margin-bottom:0.75rem;cursor:pointer;" onclick="location.href='${item.url}'">
-              <strong style="color:#ffffff;">${item.title}</strong>
-              <div style="font-size:0.85rem;color:#94a3b8;margin-top:0.25rem;">Target Date: ${item.target_event_date} · Raised $${item.raised} of $${item.goal}</div>
-            </div>
-          `).join('');
-        }
+        liveCampaigns = list;
+        renderDrivesList();
+        selectCampaign(0);
       }
     } catch (e) {
       console.warn('Could not load campaigns:', e);
     }
+  }
+
+  function renderDrivesList() {
+    const listContainer = document.getElementById('bsActiveDrivesList');
+    if (!listContainer) return;
+    listContainer.innerHTML = liveCampaigns.map((item, idx) => `
+      <div class="drive-select-card" data-idx="${idx}" style="padding:1.2rem;background:${idx === selectedIdx ? '#1c2433' : '#151c28'};border:1px solid ${idx === selectedIdx ? '#dca842' : '#233044'};border-radius:8px;margin-bottom:0.75rem;cursor:pointer;transition:all 0.2s;">
+        <div style="font-weight:700;font-size:1.05rem;color:#ffffff;margin-bottom:0.3rem;">${item.title}</div>
+        <div style="font-size:0.85rem;color:#94a3b8;">Target Date: ${item.target_event_date} · Raised $${item.raised.toLocaleString()} of $${item.goal.toLocaleString()}</div>
+      </div>
+    `).join('');
+
+    listContainer.querySelectorAll('.drive-select-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const idx = parseInt(card.getAttribute('data-idx'), 10);
+        selectCampaign(idx);
+      });
+    });
+  }
+
+  function selectCampaign(idx) {
+    selectedIdx = idx;
+    const c = liveCampaigns[idx];
+    if (!c) return;
+
+    // 1. Update Title and About section
+    const titleEl = document.getElementById('bsActiveTitle');
+    if (titleEl) titleEl.textContent = c.title;
+
+    const aboutText = document.querySelector('#v-blockstage .section-card > p.subtext');
+    if (aboutText) aboutText.textContent = `Primary 4-Piece Target: $1,640 | Max 7-Piece Headliner: $2,850`;
+
+    // 2. Update Direct Pledge button on the right card
+    const pledgeBtn = document.getElementById('btnChipInDirect');
+    if (pledgeBtn) pledgeBtn.href = c.url || 'https://givebutter.com';
+
+    // 3. Update Progress Bar
+    const barEl = document.getElementById('bsProgressBar');
+    const raised = parseFloat(c.raised) || 0;
+    const pct = Math.min(100, Math.round((raised / 2850) * 100));
+    if (barEl) barEl.style.width = pct + '%';
+
+    // 4. Update the 7 Tiers Grid
+    const tiersContainer = document.querySelector('#v-blockstage .tiers-grid');
+    if (tiersContainer) {
+      tiersContainer.innerHTML = TIERS.map(t => {
+        let isUnlocked = raised >= t.cost;
+        let isBaseGoal = t.base;
+        let pillClass = 'locked';
+        let pillText = 'Locked';
+
+        if (isUnlocked && isBaseGoal) {
+          pillClass = 'confirmed';
+          pillText = 'Event Confirmed!';
+        } else if (isUnlocked) {
+          pillClass = 'unlocked';
+          pillText = 'Unlocked!';
+        } else if (raised > 0 && raised < t.cost && (raised >= (t.cost - 400))) {
+          pillClass = 'split';
+          pillText = `$${raised} / $${t.cost}`;
+        }
+
+        return `
+          <div class="tier-box ${pillClass}">
+            <span class="tier-pill ${pillClass}">${pillText}</span>
+            <div class="tier-name">${t.name}</div>
+            <div class="tier-cost">$${t.cost.toLocaleString()} ${isBaseGoal ? '(Base Goal)' : 'Target'}</div>
+            <p class="tier-desc">${t.desc}</p>
+          </div>
+        `;
+      }).join('');
+    }
+
+    renderDrivesList();
   }
 
   // Handle Form Submission
