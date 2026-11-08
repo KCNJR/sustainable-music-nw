@@ -1007,7 +1007,7 @@ body.editing .evcard:hover .ev-adm{opacity:1}
         Whether you want to volunteer at upcoming neighborhood shows, explore board and committee roles, or simply learn more about our work in Seattle, we'd love to hear from you.
       </p>
 
-      <form class="form reveal" action="mailto:info@sustainablemusicnw.org" method="POST" enctype="text/plain" style="max-width:540px;margin:0 auto;display:flex;flex-direction:column;gap:1.1rem">
+      <form class="form reveal" id="communityContactForm" onsubmit="handleContactSubmit(event)" style="max-width:540px;margin:0 auto;display:flex;flex-direction:column;gap:1.1rem">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
           <div class="field">
             <label style="display:block;font-size:0.82rem;font-weight:600;margin-bottom:0.35rem">Your Name</label>
