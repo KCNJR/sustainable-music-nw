@@ -1365,21 +1365,21 @@ input, select, textarea {
                 const data = await response.json();
 
                 if (data.success) {
-                    closeIntakeModal();
+        closeModal();
+        if (data.flyer_pdf_url) {
+          const a = document.createElement('a');
+          a.href = data.flyer_pdf_url;
+          a.download = `BlockStage-Flyer-${(formData.neighborhood_title || 'Concert').replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        }
+        alert("Success! Your campaign is live on Givebutter.
 
-                    const downloadUrl = data.flyer_data_url || data.flyer_pdf_url;
-                    if (downloadUrl) {
-                        const a = document.createElement('a');
-                        a.href = downloadUrl;
-                        a.download = `BlockStage-Flyer-${(neighborhoodTitle || 'BlockStage').replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
-                        document.body.appendChild(a);
-                        a.click();
-                        a.remove();
-                    }
-
-                    alert("Success! Your neighborhood booking campaign has been created.\n\nYour promotional flyer has downloaded and a confirmation email has been dispatched.");
-                    await loadActiveCampaigns();
-                } else {
+Your custom 8.5x11 printable flyer with QR code has been generated and downloaded!");
+        if (typeof loadActiveCampaigns === 'function') loadActiveCampaigns();
+        return;
+      } else {
                     alert(`Error: ${data.message || 'Failed to create campaign'}`);
                 }
             } catch (err) {
