@@ -18,34 +18,33 @@ module.exports = async function handler(req, res) {
   const interest = data.interest || 'General Volunteering';
   const message = data.message || data.notes || '';
 
-  const emailUser = (process.env.EMAIL_USER || process.env.SMTP_USER || 'info@sustainablemusicnw.org').trim();
-  const emailPass = (process.env.EMAIL_PASS || process.env.SMTP_PASS || 'eozypawagwvqtpgx').replace(/[^a-zA-Z0-9]/g, '').trim();
-  const emailHost = process.env.EMAIL_HOST || 'smtp.gmail.com';
-  const emailPort = parseInt(process.env.EMAIL_PORT || '587', 10);
+  const emailUser = (process.env.EMAIL_USER || 'kevin@sustainablemusicnw.org').trim();
+  const emailPass = (process.env.EMAIL_PASS || 'eozypawagwvqtpgx').replace(/[^a-zA-Z0-9]/g, '').trim();
 
   if (email && emailPass) {
     try {
       const transporter = nodemailer.createTransport({
-        host: emailHost,
-        port: emailPort,
-        secure: emailPort === 465,
+        host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+        port: 465,
+        secure: true,
         auth: { user: emailUser, pass: emailPass },
         tls: { rejectUnauthorized: false }
       });
 
-      // 1. User confirmation
+      // 1. Volunteer confirmation
       await transporter.sendMail({
-        from: `"Sustainable Music Northwest" <${emailUser}>`,
+        from: '"Sustainable Music Northwest" <info@sustainablemusicnw.org>',
         to: email,
+        replyTo: 'info@sustainablemusicnw.org',
         subject: "Thank you for getting involved with Sustainable Music NW!",
         html: `<h3>Thank you for reaching out, ${name}!</h3>
                <p>We received your note regarding: <strong>${interest}</strong>.</p>
                <p>A member of our team will follow up with you shortly.</p>`
       }).catch(err => console.error("User confirmation error:", err.message));
 
-      // 2. Admin alert
+      // 2. Admin notification
       await transporter.sendMail({
-        from: `"SMNW Inquiries" <${emailUser}>`,
+        from: '"SMNW Inquiries" <info@sustainablemusicnw.org>',
         to: 'info@sustainablemusicnw.org',
         replyTo: email,
         subject: `[Volunteer / Board Inquiry] ${name} (${interest})`,

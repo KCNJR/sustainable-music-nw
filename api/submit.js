@@ -1,3 +1,37 @@
+
+const nodemailer = require('nodemailer');
+
+async function sendNewsletterWelcome(toEmail) {
+  const emailUser = (process.env.EMAIL_USER || 'kevin@sustainablemusicnw.org').trim();
+  const emailPass = (process.env.EMAIL_PASS || 'eozypawagwvqtpgx').replace(/[^a-zA-Z0-9]/g, '').trim();
+  if (!toEmail || !emailPass) return;
+
+  const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: { user: emailUser, pass: emailPass }
+  });
+
+  await transporter.sendMail({
+    from: '"Sustainable Music Northwest" <info@sustainablemusicnw.org>',
+    to: toEmail,
+    replyTo: 'info@sustainablemusicnw.org',
+    subject: "Welcome to Sustainable Music Northwest!",
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 580px; margin: 0 auto; line-height: 1.6; color: #1e293b; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+        <div style="background-color: #1e1b18; padding: 20px; border-bottom: 4px solid #dca842;">
+          <h2 style="color: #dca842; margin: 0;">Live music, back on your block.</h2>
+        </div>
+        <div style="padding: 24px;">
+          <p>Thank you for subscribing to Sustainable Music Northwest!</p>
+          <p>You'll be the first to hear about upcoming neighborhood block concerts, artist partnerships, and community initiatives across Seattle.</p>
+        </div>
+      </div>
+    `
+  }).catch(e => console.error("Newsletter email error:", e.message));
+}
+
 // Receives roster + mailing-list submissions and stores them in Vercel KV
 // (Upstash Redis) via the REST API. No dependencies, plain fetch.
 
@@ -36,6 +70,7 @@ module.exports = async function handler(req, res) {
 
   try {
     await kv(['RPUSH', 'smnw:' + type, JSON.stringify(rec)]);
+    if (type === 'mailing') { await sendNewsletterWelcome(email); }
     res.status(200).json({ success: true });
   } catch (e) {
     res.status(500).json({ error: 'save failed' });
