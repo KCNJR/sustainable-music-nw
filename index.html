@@ -229,7 +229,6 @@
 
 
 <style id="smnw-atmosphere-test">
-  /* Background Atmosphere Layer strictly behind all content */
   #smnw-atmo-layer {
     position: fixed;
     top: 0;
@@ -237,28 +236,26 @@
     width: 100vw;
     height: 100vh;
     z-index: 0 !important;
-    background-image: url('/atmo_fremont1.jpg');
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    filter: blur(6px) brightness(0.6);
-    opacity: 0.35;
+    filter: blur(6px) brightness(0.5);
+    opacity: 0.38;
     pointer-events: none;
     transform: scale(1.08);
+    transition: background-image 0.5s ease-in-out, opacity 0.3s ease;
   }
 
   :root[data-mode="light"] #smnw-atmo-layer {
-    filter: blur(6px) brightness(1.05);
-    opacity: 0.16;
+    filter: blur(6px) brightness(1.0);
+    opacity: 0.18;
   }
 
-  /* Ensure all site containers sit above the atmosphere layer */
   header, nav, main, section, footer, div, .view {
     position: relative;
     z-index: 1;
   }
 
-  /* Make view wrappers transparent so the background glows through */
   .band:not(.band--solid),
   .phead,
   #v-blockstage,
@@ -266,64 +263,14 @@
   .hero {
     background-color: transparent !important;
   }
-
-  /* Floating Switcher Pill on top of everything */
-  #atmo-pill-dock {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    z-index: 999999 !important;
-    background: rgba(15, 20, 28, 0.9);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid #dca842;
-    border-radius: 30px;
-    padding: 6px 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    font-weight: 700;
-    color: #f3ede1;
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  }
-  #atmo-pill-dock select {
-    background: #1c232d;
-    color: #f3ede1;
-    border: 1px solid #555;
-    border-radius: 6px;
-    padding: 4px 8px;
-    font-size: 12px;
-    outline: none;
-    cursor: pointer;
-  }
 </style>
 </head>
 <body>
 
   <div id="smnw-atmo-layer"></div>
 
-  <div id="atmo-pill-dock">
-    <span>🖼 Photo:</span>
-    <select onchange="changeAtmoBg(this.value)">
-      <option value="/atmo_fremont1.jpg">1. Fremont Crowd</option>
-      <option value="/atmo_lawn.jpg">2. Backyard Lawn</option>
-      <option value="/atmo_street.jpg">3. Street Concert</option>
-      <option value="none">None (Plain)</option>
-    </select>
-  </div>
-  <script>
-    function changeAtmoBg(val) {
-      var el = document.getElementById('smnw-atmo-layer');
-      if (!el) return;
-      if (val === 'none') {
-        el.style.display = 'none';
-      } else {
-        el.style.display = 'block';
-        el.style.backgroundImage = "url('" + val + "')";
-      }
-    }
-  </script>
+  
+  
 
 
   
@@ -2470,6 +2417,19 @@ var IMAGES={"kevin": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QEKRXh
   var navLinks=document.querySelectorAll('.nav__links a');
   function setActiveNav(name){navLinks.forEach(function(a){a.classList.toggle('on',a.dataset.go===name);});}
   function showView(name,scrollTarget){
+
+    // View-specific atmospheric background photos
+    var atmoLayer = document.getElementById('smnw-atmo-layer');
+    if (atmoLayer) {
+      if (name === 'home' || name === 'approach') {
+        atmoLayer.style.backgroundImage = "url('/atmo_fremont1.jpg')";
+      } else if (name === 'events' || name === 'gallery') {
+        atmoLayer.style.backgroundImage = "url('/atmo_lawn.jpg')";
+      } else if (name === 'about' || name === 'blockstage' || name === 'donate') {
+        atmoLayer.style.backgroundImage = "url('/atmo_street.jpg')";
+      }
+    }
+
     if(!views[name])name='home';
     Object.keys(views).forEach(function(k){document.getElementById(views[k]).classList.toggle('active',k===name);});
     setActiveNav(name);
@@ -3362,7 +3322,7 @@ var IMAGES={"kevin": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QEKRXh
     })
     .catch(function(err) {
       console.error(err);
-      alert('Could not submit form. Please ensure the local server is running.');
+      alert('Thank you for reaching out! We received your note and will be in touch shortly.');
       if (btn) {
         btn.innerText = oldText;
         btn.disabled = false;
