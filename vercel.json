@@ -1,6 +1,1 @@
-{
-  "rewrites": [
-    { "source": "/api/campaigns/create", "destination": "/api/campaigns-create" },
-    { "source": "/api/campaigns/active", "destination": "/api/campaigns-active" }
-  ]
-}
+{}
