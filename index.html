@@ -3276,62 +3276,79 @@ var IMAGES={"kevin": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QEKRXh
 </script>
 
 
+
+
 <script id="get-involved-handler">
 (function() {
-  document.addEventListener('submit', function(e) {
-    const form = e.target.closest('#getInvolvedForm');
+  function setupGetInvolved() {
+    var form = document.getElementById('getInvolvedForm') || document.querySelector('#v-about form') || document.querySelector('form[action*="get-involved"]');
     if (!form) return;
 
-    // Halt browser default page reload
-    e.preventDefault();
-    e.stopPropagation();
+    form.onsubmit = async function(e) {
+      e.preventDefault();
+      e.stopPropagation();
 
-    const btn = form.querySelector('button[type="submit"]') || form.querySelector('button');
-    const oldText = btn ? btn.innerText : 'Send Message';
-    if (btn) {
-      btn.innerText = 'Sending...';
-      btn.disabled = true;
-    }
-
-    const payload = {
-      name: form.elements['name'] ? form.elements['name'].value : '',
-      email: form.elements['email'] ? form.elements['email'].value : '',
-      interest: form.elements['interest'] ? form.elements['interest'].value : '',
-      message: form.elements['message'] ? form.elements['message'].value : ''
-    };
-
-    fetch('/api/get-involved', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-    .then(function(res) {
-      if (!res.ok) throw new Error('Network error');
-      return res.json();
-    })
-    .then(function(data) {
-      form.style.display = 'none';
-      const successBox = document.getElementById('getInvolvedSuccess');
-      if (successBox) {
-        successBox.style.display = 'block';
-      } else {
-        const box = document.createElement('div');
-        box.style.cssText = 'padding:1.5rem;background:rgba(220,168,66,0.15);border:1px solid #dca842;border-radius:8px;color:#fff;margin-top:1rem;';
-        box.innerHTML = '<h3 style="color:#dca842;margin:0 0 0.5rem 0;">Thank you for stepping forward!</h3><p style="margin:0;">We received your note and dispatched a confirmation to your email. We will be in touch shortly!</p>';
-        form.parentNode.appendChild(box);
-      }
-    })
-    .catch(function(err) {
-      console.error(err);
-      alert('Thank you for reaching out! We received your note and will be in touch shortly.');
+      var btn = form.querySelector('button[type="submit"]') || form.querySelector('button');
+      var originalBtnText = btn ? btn.innerText : 'SEND';
       if (btn) {
-        btn.innerText = oldText;
-        btn.disabled = false;
+        btn.innerText = 'SENDING...';
+        btn.disabled = true;
       }
-    });
-  }, true);
+
+      // Collect values safely regardless of specific ID/name attributes
+      var nameInput = form.querySelector('input[name="name"]') || form.querySelector('input[type="text"]') || {};
+      var emailInput = form.querySelector('input[name="email"]') || form.querySelector('input[type="email"]') || {};
+      var selectInterest = form.querySelector('select') || {};
+      var notesTextarea = form.querySelector('textarea') || {};
+
+      var payload = {
+        type: 'community',
+        name: nameInput.value || 'Neighbor',
+        email: emailInput.value || '',
+        interest: selectInterest.value || 'Volunteer at upcoming block concerts',
+        message: notesTextarea.value || ''
+      };
+
+      try {
+        var res = await fetch('/api/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        var data = await res.json();
+        if (res.ok && data.success) {
+          form.style.display = 'none';
+          var existingSuccess = document.getElementById('getInvolvedSuccess');
+          if (existingSuccess) {
+            existingSuccess.style.display = 'block';
+          } else {
+            var successBanner = document.createElement('div');
+            successBanner.id = 'getInvolvedSuccess';
+            successBanner.style.cssText = 'padding: 28px; background: rgba(220,168,66,0.12); border: 1px solid #dca842; border-radius: 8px; text-align: center; margin-top: 20px;';
+            successBanner.innerHTML = '<h3 style="color:#dca842;margin:0 0 8px 0;font-size:1.3rem;">Thank you for stepping forward!</h3><p style="margin:0;color:inherit;font-size:0.95rem;">We received your note and dispatched a confirmation to your email. We will be in touch shortly!</p>';
+            form.parentNode.appendChild(successBanner);
+          }
+        } else {
+          throw new Error((data && data.error) || 'Submission error');
+        }
+      } catch (err) {
+        console.error('Get Involved submission error:', err);
+        if (btn) {
+          btn.innerText = originalBtnText;
+          btn.disabled = false;
+        }
+        alert('There was an issue submitting your note. Please try again.');
+      }
+    };
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupGetInvolved);
+  } else {
+    setupGetInvolved();
+  }
 })();
 </script>
-
 </body>
 </html>
