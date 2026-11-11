@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
-const { generateBlockStageFlyer } = require('./flyerEngine');
-const { sendChampionWelcomeEmail } = require('./emailEngine');
+const { generateBlockStageFlyer } = require('../../lib/flyerEngine');
+const { sendChampionWelcomeEmail } = require('../../lib/emailEngine');
 
 const storageDir = os.tmpdir();
 
