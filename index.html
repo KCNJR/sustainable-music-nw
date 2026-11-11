@@ -3040,6 +3040,13 @@ var IMAGES={"kevin": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QEKRXh
 
   // If the page loads with #blockstage in the URL, immediately show it
   window.addEventListener('DOMContentLoaded', function() {
+    // Direct URL entry handling (/blockstage or #blockstage)
+    var currentPath = window.location.pathname.toLowerCase();
+    var currentHash = window.location.hash.toLowerCase();
+    if (currentPath.includes('/blockstage') || currentHash.includes('blockstage')) {
+      showView('blockstage');
+    }
+
     if (window.location.hash === '#blockstage') {
       activateView('blockstage');
     }

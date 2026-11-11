@@ -1,1 +1,8 @@
-{}
+{
+  "rewrites": [
+    {
+      "source": "/blockstage",
+      "destination": "/index.html"
+    }
+  ]
+}
